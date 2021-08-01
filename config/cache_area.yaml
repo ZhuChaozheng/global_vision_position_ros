@@ -1,0 +1,8 @@
+%YAML:1.0
+---
+# define a rectangle area for waiting other cars
+cache_area_left_x: 110.12
+cache_area_left_y: 210.12
+
+cache_area_right_x: 310.12
+cache_area_right_y: 410.12

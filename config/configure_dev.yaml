@@ -1,0 +1,199 @@
+%YAML:1.0
+---
+s: 203067
+cameraMatrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 8.2322484623389789e+02, 0., 6.5199360623872849e+02, 0.,
+       8.2322484623389789e+02, 5.0598339959414085e+02, 0., 0., 1. ]
+rvecM1: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 2.439345783404379e-02, 8.943261827107734e-01, 4.467500846478651e-01, 9.92319262905849e-01,
+       3.255049558874668e-02, -1.193438130064516e-01, -1.212742333758108e-01, 4.462299229712222e-01, -8.866630792833353e-01 ]
+tvec1: !!opencv-matrix
+   rows: 3
+   cols: 1
+   dt: d
+   data: [ -3.017743808303063e+04, 7.905054684715167e+03,
+       2.030233513756159e+05 ]
+ 
+# 0
+# The debugging of the speed and slope pid of 
+# car No.130 has completed, 300 to 450 is proved to be a stable speed range for the car.
+#slope_p_0: -0.4 slope_i_0: -0.5 slope_d_0: 0.3
+#speed_p_0: -0.03 speed_i_0: -0.03 speed_d_0: 2
+
+marker_0: 0
+ip_0: "192.168.8.130"
+port_0: 10000
+slope_p_0: -0.4
+slope_i_0: -0.7
+slope_d_0: 1
+speed_p_0: -0.04
+speed_i_0: -0.05
+speed_d_0: 2
+target_slope_0: 270
+target_speed_0: 50
+target_point_x_0: 112
+target_point_y_0: 123.0
+
+#IP:192.168.114  slope(p:-0.4;i:-0.7;d:1)   speed(p:-0.04;i:-0.05;d:2)
+# 1
+# The debugging of the speed and slope pid of 
+# car No.131 has completed,300 to 450 is proved to be a stable speed range for the car.
+marker_1: 1
+ip_1: "192.168.8.131"
+port_1: 10000
+slope_p_1: -0.4
+slope_i_1: -0.5
+slope_d_1: 0.2
+speed_p_1: -0.03
+speed_i_1: -0.03
+speed_d_1: 2
+target_slope_1: 90
+target_speed_1: 90
+
+#marker_1: 1
+#ip_1: "192.168.8.114" port_p:0.5;port_i:0.8;port_d:0.2;
+#speed_p:-0.03;speed_i:-0.03;speed_i:
+
+# 2
+marker_2: 2
+ip_2: "192.168.8.114"
+port_2: 10000
+slope_p_2: -0.8
+slope_i_2: 0.8
+slope_d_2: 0.2
+speed_p_2: 50
+speed_i_2: 0
+speed_d_2: 0
+target_slope_2: 0.0
+target_speed_2: 100.0
+
+# 3
+#marker_1: 1
+#ip_3: "192.168.8.132"
+#slope_p_3: -0.5  slope_i_3: -0.8slope_d_3: 0.2
+#speed_p_3: -0.05 speed_i_3: -0.04 speed_d_3: 2
+marker_3: 3
+ip_3: "192.168.8.132"
+port_3: 10000
+slope_p_3: -0.5  
+slope_i_3: -0.8
+slope_d_3: 0.2
+speed_p_3: -0.05
+speed_i_3: -0.04
+speed_d_3: 2
+target_slope_3: 180
+target_speed_3: 40
+
+# 4
+marker_4: 4
+ip_4: "192.168.8.113"
+port_4: 10000
+slope_p_4: 0.5
+slope_i_4: -1.2
+slope_d_4: 0.2
+speed_p_4: -0.03
+speed_i_4: -0.03
+speed_d_4: 2
+target_slope_4: 95
+target_speed_4: 300
+
+
+# 4
+#marker_4: 4
+#ip_4: "192.168.8.119"
+#port_4: 10000
+#slope_p_4: 0.5
+#slope_i_4: 0.7
+#slope_d_4: 0.2
+#speed_p_4: -0.01
+#speed_i_4: -0.015
+#speed_d_4: 2
+#target_slope_4: 90
+#target_speed_4: 300
+
+# 5
+#the debugging of slope pid of 
+# this car has completed , but there is someting wrong with the speed pid.
+#we guess 
+marker_5: 5
+ip_5: "192.168.8.120"
+port_5: 10000
+slope_p_5: -0.5
+slope_i_5: -0.8
+slope_d_5: 0.2
+speed_p_5: -0.03
+speed_i_5: -0.03
+speed_d_5: 2
+target_slope_5: 90
+target_speed_5: 300
+# marker_5: 5
+# ip_5: "192.168.8.120"
+# port_5: 10000
+# slope_p_5: -0.428
+# slope_i_5: -0.78
+# slope_d_5: -0.15
+# speed_p_5: 0
+# speed_i_5: 0
+# speed_d_5: 0
+# target_slope_5: 180
+# target_speed_5: 0.0
+
+# 6
+marker_6: 6
+ip_6: "192.168.8.137"
+port_6: 10000
+slope_p_6: -0.5
+slope_i_6: -0.8
+slope_d_6: 0.2
+speed_p_6: -0.03
+speed_i_6: -0.03
+speed_d_6: 2
+target_slope_6: 93
+target_speed_6: 300
+
+#IP:192.168.8.137   slope(p:-0.5;i:-0.8;d:0.2)  speed(p:-0.03;i:-0.03;d:2)
+
+# 7
+marker_7: 7
+ip_7: "192.168.8.116"
+port_7: 10000
+slope_p_7: 2.0
+slope_i_7: -0.9
+slope_d_7: 0.5
+speed_p_7: 0
+speed_i_7: 0
+speed_d_7: 0
+target_slope_7: 90.0
+target_speed_7: 0
+
+# 8
+marker_8: 8
+ip_8: "192.168.8.110"
+port_8: 10000
+slope_p_8: 0.5
+slope_i_8: -0.8
+slope_d_8: 0.2
+speed_p_8: 0
+speed_i_8: 0
+speed_d_8: 0
+target_slope_8: 0.0
+target_speed_8: 0.0
+
+# 9
+marker_9: 9
+ip_9: "192.168.8.110"
+port_9: 10000
+slope_p_9: 2
+slope_i_9: -0.8
+slope_d_9: 0.4
+speed_p_9: 100.0
+speed_i_9: 0
+speed_d_9: 0
+target_slope_9: 0.0
+target_speed_9: 0.0
