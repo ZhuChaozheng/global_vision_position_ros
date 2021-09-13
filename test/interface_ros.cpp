@@ -15,7 +15,6 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
     std_msgs::String msg;
-
     std::stringstream ss;
    // for(int i = 0; i <= 9; i ++)
 	   // point.x point.y speed    slope  stop_flag

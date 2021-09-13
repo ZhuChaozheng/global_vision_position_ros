@@ -232,26 +232,6 @@ void* udp_server_interface(void* args)
     udp_server.udp_server_init();
     return 0;
 }
-/* 
- * capture the camera and analyse the detail, then return 
- * point set of cars and barrier images. 
- * note: this is a thread
- */
-void* getRightCameraImg(void* args)
-{
-    capture_handle_image(src_right, barriers_image_right, 
-            car_set_right, getCarRight, camera_matrix_right,
-            distCoeffsRight, 1);
-}
-/*
- * similiarly with the above function.
- */
-void* getLeftCameraImg(void* args)
-{
-    capture_handle_image(src_left, barriers_image_left, 
-            car_set_left, getCarLeft, camera_matrix_left,
-            distCoeffsLeft, 0);
-}
 
 float convertDegree(double yaw) {
     if (yaw < 0)
@@ -366,15 +346,15 @@ int main(int argc, char** argv)
                 Point2f medianPoint;
 
                 if (marker == 1) {
-                	    quatx = tag_1.getRotation().getX(); 
-                            quaty = tag_1.getRotation().getY();
-                            quatz = tag_1.getRotation().getZ();
-                            quatw = tag_1.getRotation().getW();
-                	    tf::Quaternion quat(quatx, quaty, quatz, quatw);
-                            
-                            tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-                            slope = convertDegree(yaw); 
-                medianPoint = Point2f(tag_1.getOrigin().x() * 1000, tag_1.getOrigin().y() * 1000);
+            	    quatx = tag_1.getRotation().getX(); 
+                    quaty = tag_1.getRotation().getY();
+                    quatz = tag_1.getRotation().getZ();
+                    quatw = tag_1.getRotation().getW();
+            	    tf::Quaternion quat(quatx, quaty, quatz, quatw);
+                        
+                    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_1.getOrigin().x() * 1000, tag_1.getOrigin().y() * 1000);
                 /*
                 	    ROS_INFO("tag_1:Tx=%.2f,Ty=%.2f,Tz=%.2f, yaw=%.2f ",
                             tag_1.getOrigin().x(),
@@ -466,7 +446,9 @@ int main(int argc, char** argv)
                 //        // (*iter).navigateQueue.push_back(temp); // insert front point into end 
                 //     }
                 // }
-            IsPointInRotatedRect(boundary_rect, )
+            if (IsPointInRotatedRect(boundary_rect, medianPoint))
+                true 1
+            false 0
             // ***************** Navigation Step ********************            
             if (NavigateTargetPoint(*iter) == 0) // reach target
                 // assign next target
