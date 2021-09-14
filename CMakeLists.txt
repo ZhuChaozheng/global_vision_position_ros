@@ -18,6 +18,7 @@ include_directories( "/usr/include/eigen3" )
 #set(OpenCV_DIR "/home/nvidia/Downloads/opencv-3.1.0/build")
 include_directories("/opt/MVS/include")
 link_directories("/opt/MVS/lib/64")
+link_directories("/usr/lib")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -29,6 +30,7 @@ find_package(catkin REQUIRED COMPONENTS
 #  opencv
   roscpp
   tf
+  nav_msgs
   std_msgs
 )
 
@@ -90,10 +92,12 @@ message(STATUS "version: ${OpenCV_VERSION}")
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  geometry_msgs   
+  std_msgs
+  nav_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -125,9 +129,10 @@ message(STATUS "version: ${OpenCV_VERSION}")
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS
-  CATKIN_DEPENDS geometry_msgs
+  CATKIN_DEPENDS 
+  geometry_msgs
   roscpp
+  nav_msgs
   std_msgs
 )
 

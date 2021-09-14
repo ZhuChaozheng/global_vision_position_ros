@@ -1,7 +1,6 @@
 #ifndef NAVIGATION_H
 #define NAVIGATION_H
 #include "car.h"
-#include "image_process.h"
 
 /*
  * this function to realize navigating the specific point by

@@ -28,11 +28,7 @@
 #include "car.h"
 #include "udp.h"
 #include "pid.h"
-#include "image_process.h"
-#include "init_camera.h"
-#include "image_transformation.h"
 #include "file_operation.h"
-#include "map_pub.h"
 #include "car.h"
 #include "navigation.h"
 
@@ -84,6 +80,42 @@ void sigint_handler(int sig)
     {
         std::cout << "C pressed!" << endl;
         app_stopped = true;
+    }
+}
+
+/**
+ *
+ * search the corresponding car in the set of car
+ * output data: Car lastCar
+ *
+ */
+bool Exist(Car& car, vector<Car>& carStateSet, Car& lastCar)
+{
+    for(auto iter = carStateSet.begin(); 
+        iter != carStateSet.end();)
+    {
+        if (car.get_marker() == (*iter).get_marker())
+        {
+            lastCar = *iter;
+            return true;
+        }
+
+        iter ++;
+    }
+    return false;
+}
+
+void DeleteCar(Car& car, vector<Car>& carStateSet)
+{
+    for(auto iter = carStateSet.begin(); 
+            iter != carStateSet.end();)
+    {
+        if (car.get_marker() == (*iter).get_marker())
+        {
+            iter = carStateSet.erase(iter);
+            return;
+        }
+        iter ++;
     }
 }
 
@@ -446,9 +478,6 @@ int main(int argc, char** argv)
                 //        // (*iter).navigateQueue.push_back(temp); // insert front point into end 
                 //     }
                 // }
-            if (IsPointInRotatedRect(boundary_rect, medianPoint))
-                true 1
-            false 0
             // ***************** Navigation Step ********************            
             if (NavigateTargetPoint(*iter) == 0) // reach target
                 // assign next target

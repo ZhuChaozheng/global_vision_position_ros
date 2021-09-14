@@ -4,17 +4,9 @@
  * interface has completed half of content.
  *
  */
-#include <Eigen/Core>
-#include <Eigen/Dense>
-
-#include <unistd.h>
 #include "ros/ros.h"
+#include <geometry_msgs/Twist.h>
 #include "std_msgs/String.h"
-#include "nav_msgs/OccupancyGrid.h"
-#include "nav_msgs/MapMetaData.h"
-#include <tf/transform_listener.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/TransformStamped.h>
 #include "opencv2/imgproc.hpp"
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,11 +20,7 @@
 #include "car.h"
 #include "udp.h"
 #include "pid.h"
-#include "image_process.h"
-#include "init_camera.h"
-#include "image_transformation.h"
 #include "file_operation.h"
-#include "map_pub.h"
 #include "car.h"
 #include "navigation.h"
 
@@ -45,7 +33,7 @@ udp udp_server;
 /**
  * This tutorial demonstrates simple receipt of messages over the ROS system.
  */
-void vel_command_callback(int marker, const geometry_msgs::TwistConstPtr& msg)
+void vel_command_callback(const geometry_msgs::TwistConstPtr& msg, int marker)
 {
     cout << "vel_command_callback:  " << marker << endl;
     float linear_x = static_cast<float>(msg->linear.x);
@@ -82,18 +70,23 @@ void vel_command_callback(int marker, const geometry_msgs::TwistConstPtr& msg)
     udp_comm.send_data(sock_fd, src, sizeof(src));
 }
 
-
-void* sub_spin(void* args) 
+void sub_spin() 
 {
 	// create ros node handle
 	ros::NodeHandle n;
-    // ros::Subscriber sub = n.subscribe("comm", 
-    //         1000, comm_call_back);
+    vector<ros::Subscriber> cmd_vel_set_;
     for (int i = 0; i <= 9; i ++)
-        ros::Subscriber sub = nh.subscribe<geometry_msgs::Twist>("/marker" + i + 
-                "/cmd_vel", 15, vel_command_callback(i));
+    {
+        string front_str = "/marker";
+        string end_str = "/cmd_vel";
+        stringstream ss;
+        ss << front_str << i << end_str;
+        string topic = ss.str();
+        ros::Subscriber sub = n.subscribe<geometry_msgs::Twist>(topic, 15,
+                boost::bind(&vel_command_callback, _1, i));
+        cmd_vel_set_.push_back(sub);
+    }
 	ros::spin();
-	return 0;
 }
 
 /*
@@ -109,18 +102,12 @@ int main(int argc, char** argv)
 {
     ros::init(argc,argv,"control_sub");
     // ************ udp control interface thread *********
-    pthread_t tids[5];
+    pthread_t tids[2];
     int ret_udp = pthread_create(&tids[0], NULL, udp_server_interface, NULL);
     if (ret_udp != 0)
     {
        cout << "pthread_create error at ret_udp: error_code=" << ret_udp << endl;
     }
-    
-    int ret_sub_spin = pthread_create(&tids[4], NULL, 
-            sub_spin, NULL);
-    if (ret_sub_spin != 0)
-    {
-       cout << "pthread_create init error at ret_sub_spin: error_code=" << ret_sub_spin << endl;
-    }
+    sub_spin();
     return 0;
 }

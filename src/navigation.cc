@@ -11,6 +11,7 @@
  */
 int NavigateTargetPoint(Car &car)
 {    
+    /*
     // the center of circumcircle 
     Point2f current_point = car.get_median_point(); 
     Point2f target_point = car.get_target_point();
@@ -28,5 +29,6 @@ int NavigateTargetPoint(Car &car)
         car.set_target_speed(0);
         return 0;
     }
+    */
     return -1;
 }

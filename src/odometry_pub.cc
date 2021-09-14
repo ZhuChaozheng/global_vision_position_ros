@@ -31,19 +31,42 @@
 using namespace cv;
 using namespace std;
 
-// classification of car
-vector<Car> car_set;
-/* 
- * wait for the signal keyboard of ctrl+c
+/**
+ *
+ * search the corresponding car in the set of car
+ * output data: Car lastCar
+ *
  */
-void sigint_handler(int sig) 
+bool Exist(Car& car, vector<Car>& carStateSet, Car& lastCar)
 {
-    if (sig == SIGINT) 
+    for(auto iter = carStateSet.begin(); 
+        iter != carStateSet.end();)
     {
-        std::cout << "C pressed!" << endl;
-        app_stopped = true;
+        if (car.get_marker() == (*iter).get_marker())
+        {
+            lastCar = *iter;
+            return true;
+        }
+
+        iter ++;
+    }
+    return false;
+}
+
+void DeleteCar(Car& car, vector<Car>& carStateSet)
+{
+    for(auto iter = carStateSet.begin(); 
+            iter != carStateSet.end();)
+    {
+        if (car.get_marker() == (*iter).get_marker())
+        {
+            iter = carStateSet.erase(iter);
+            return;
+        }
+        iter ++;
     }
 }
+
 
 float convertDegree(double yaw) {
     if (yaw < 0)
@@ -54,12 +77,20 @@ float convertDegree(double yaw) {
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "odometry_pub");
-    ros::NodeHandle n;
+    ros::NodeHandle n;    
+    ros::Rate rate(30); 
     ros::Publisher odom_publisher_;
+    vector<ros::Publisher> odom_publisher_set_;
+    // init parameter of pid through rosparams
+    // classification of car
+    vector<Car> car_set;
+    ConfigParamtersRead(car_set);
+    cout << car_set.size() << endl;
     // batch initilization the topic vector
     for (auto iter = car_set.begin(); iter != car_set.end();)
     {
-        int marker = (*iter).get_marker();    
+        int marker = (*iter).get_marker();
+        cout << marker << endl;
         string front_str = "/odom_";
         stringstream ss;
         ss << front_str << marker;
@@ -67,10 +98,8 @@ int main(int argc, char** argv)
         odom_publisher_ = n.advertise<nav_msgs::Odometry>(topic, 50);
         odom_publisher_set_.push_back(odom_publisher_);
         iter ++;
-    }
-    ros::Rate rate(30);  
+    } 
     tf::TransformListener car_location;
-    
     //用来保存寻找到的坐标变换数据
     tf::StampedTransform tag_0;
     tf::StampedTransform tag_1;
@@ -82,19 +111,16 @@ int main(int argc, char** argv)
     tf::StampedTransform tag_7;
     tf::StampedTransform tag_8;
     tf::StampedTransform tag_9;
-    // init parameter of pid through rosparams
-    ConfigParamtersRead(car_set);
+    
     // *********** main thread ******************
-    // register signal ctrl+c
-    signal(SIGINT, sigint_handler);
     // clock_t lastTime = clock(); 
     vector<Car> carStateSet; 
-    
+    // build a car alive set based on slope, once it is not zero
+    vector<Car> car_alive_set;
     double consumeTime;
     ros::Time currentTime,lastTime;
     lastTime = ros::Time::now();
-    // build a car alive set based on slope, once it is not zero
-    vector<Car> car_alive_set;
+    
     while(n.ok())
     {
 
@@ -128,6 +154,7 @@ int main(int argc, char** argv)
         	    float target_speed = (*iter).get_target_speed();
     	        // float speed = (*iter).get_speed();
     	        double quatx, quaty, quatz, quatw;
+                tf::Quaternion quat;
                 double roll, pitch, yaw; // save roll pitch yaw
                 float slope;
                 Point2f medianPoint;
@@ -137,7 +164,7 @@ int main(int argc, char** argv)
                     quaty = tag_1.getRotation().getY();
                     quatz = tag_1.getRotation().getZ();
                     quatw = tag_1.getRotation().getW();
-            	    tf::Quaternion quat(quatx, quaty, quatz, quatw);
+            	    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
                     slope = tf::getYaw(quat);
                     // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
                     // slope = convertDegree(yaw); 
@@ -148,19 +175,21 @@ int main(int argc, char** argv)
                 (*iter).set_median_point(medianPoint);
         	    //cout << "marker: " << marker << endl;
         	    //cout << "slope: " << slope << endl; 
-    	        cout << marker << " " << slope << "medianPoint: " 
-                        << medianPoint << endl;
+    	        // cout << marker << " " << slope << "medianPoint: " 
+             //            << medianPoint << endl;
                 Car lastCar;
+                float speed = 0;
+                float angular = 0;
                 if (Exist((*iter), carStateSet, lastCar))
                 {
                     Point2f lastMedianPoint = lastCar.get_median_point();
                     // cout << "lastMedianPoint: " << lastMedianPoint << endl;
                     float lastSlope = lastCar.get_slope();
                     float lastspeed = (*iter).get_speed();
-    		        float speed = sqrt(pow(medianPoint.x - 
+    		        speed = sqrt(pow(medianPoint.x - 
                             lastMedianPoint.x, 2) + pow(medianPoint.y - 
                             lastMedianPoint.y, 2)) / consumeTime; 
-                    float angular = (slope - lastSlope) / consumeTime;
+                    angular = (slope - lastSlope) / consumeTime;
                     (*iter).set_speed(speed);
                     DeleteCar(*iter, carStateSet);
                 }
@@ -170,14 +199,16 @@ int main(int argc, char** argv)
                     car_alive_set.push_back(*iter);
 
                 nav_msgs::Odometry odom;
-                odom.header.stamp = current_time;
+                odom.header.stamp = currentTime;
                 odom.header.frame_id = "odom";
 
+                geometry_msgs::Quaternion msg_q;
+                tf::quaternionTFToMsg(quat, msg_q);
                 //set the position
                 odom.pose.pose.position.x = medianPoint.x;
                 odom.pose.pose.position.y = medianPoint.y;
                 odom.pose.pose.position.z = 0.0;
-                odom.pose.pose.orientation = quat;
+                odom.pose.pose.orientation = msg_q;
 
                 //set the velocity
                 odom.child_frame_id = "base_link";

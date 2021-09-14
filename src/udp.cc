@@ -108,7 +108,6 @@ void udp::udp_server_init()
 {
     int server_fd, ret;
     struct sockaddr_in ser_addr;
-
     server_fd = socket(AF_INET, SOCK_DGRAM, 0); //AF_INET:IPV4;SOCK_DGRAM:UDP
     if(server_fd < 0)
     {
@@ -120,14 +119,12 @@ void udp::udp_server_init()
     ser_addr.sin_family = AF_INET;
     ser_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP
     ser_addr.sin_port = htons(SERVER_PORT);  //port
-
     ret = bind(server_fd, (struct sockaddr*)&ser_addr, sizeof(ser_addr));
     if(ret < 0)
     {
         printf("socket bind fail!\n");
         return;
     }
-
     handle_udp_msg(server_fd);   // handle message
 
     close(server_fd);
