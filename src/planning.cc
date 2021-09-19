@@ -29,10 +29,10 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 {
 	  int i = marker;
     nav_msgs::Odometry robotOdometryMsg = *locator;
-  	ROS_INFO("robot Position: %f, %f", robotOdometryMsg.pose.pose.position.x,
-            robotOdometryMsg.pose.pose.position.y);
-  	ROS_INFO("robot Heading: linear:%f, angular:%f", robotOdometryMsg.twist.twist.linear.x,
-            robotOdometryMsg.twist.twist.angular.z);
+  	// ROS_INFO("marker: %d, robot Position: %f, %f", i, robotOdometryMsg.pose.pose.position.x,
+   //          robotOdometryMsg.pose.pose.position.y);
+  	// ROS_INFO("marker: %d, robot Heading: linear:%f, angular:%f", i, robotOdometryMsg.twist.twist.linear.x,
+   //          robotOdometryMsg.twist.twist.angular.z);
   	pos_x_array[i] = robotOdometryMsg.pose.pose.position.x;
   	pos_y_array[i] = robotOdometryMsg.pose.pose.position.y;
   	vel_x_array[i] = robotOdometryMsg.twist.twist.linear.x;
@@ -52,7 +52,7 @@ void* sub_spin(void* args)
         ss << front_str << i;
         string topic = ss.str();
         ros::Subscriber odom_sub_ = nh.subscribe<nav_msgs::Odometry>(topic, 
-                100, boost::bind(&robotOdomCallback, _1, i));
+                25, boost::bind(&robotOdomCallback, _1, i));
         odom_sub_set_.push_back(odom_sub_);
     }
     ros::spin();
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
         // construct topic '/marker1/cmd_vel'
         ss << front_str << i << end_str;
         string topic = ss.str();
-        vel_pub_ = n.advertise<geometry_msgs::Twist>(topic, 15);
+        vel_pub_ = n.advertise<geometry_msgs::Twist>(topic, 30);
         vel_pub_set_.push_back(vel_pub_);
     }
   	// loop
@@ -127,14 +127,16 @@ int main(int argc, char** argv)
     		// convert out_cmd_vel, out_theta_cmd to /cmd_vel
     		// for(int i = 0, auto vel_pub = vel_pub_set_.begin(); 
       //           vel_pub != vel_pub_set_.end();)
+        int i = 0;
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
         {
-            int i = 0;
             geometry_msgs::Twist twist;
     		  	twist.linear.x = out_cmd_vel[i];
     		  	twist.linear.y = 0;
     		  	twist.angular.z = out_theta_cmd[i];
+            if (i == 2)
+              cout << "out_cmd_vel: " << out_cmd_vel[i] << "out_theta_cmd: " << out_theta_cmd[i] << endl;
     		  	(*vel_pub).publish(twist); 
             vel_pub ++;
             i ++;

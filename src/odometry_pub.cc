@@ -132,15 +132,13 @@ int main(int argc, char** argv)
             car_location.lookupTransform("hik_camera","tag_0",ros::Time(0),tag_0);
             car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
             car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
-            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);/*
+            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
             car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
             car_location.lookupTransform("hik_camera","tag_5",ros::Time(0),tag_5);
             car_location.lookupTransform("hik_camera","tag_6",ros::Time(0),tag_6);
-/*
             car_location.lookupTransform("hik_camera","tag_7",ros::Time(0),tag_7);
             car_location.lookupTransform("hik_camera","tag_8",ros::Time(0),tag_8);
-            car_location.lookupTransform("hik_camera","tag_9",ros::Time(0),tag_9);
-  */          
+         //   car_location.lookupTransform("hik_camera","tag_9",ros::Time(0),tag_9);         
      
             for (auto iter = car_set.begin(); iter != car_set.end();)
             {
@@ -165,11 +163,83 @@ int main(int argc, char** argv)
                     quatz = tag_1.getRotation().getZ();
                     quatw = tag_1.getRotation().getW();
             	    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
-                    slope = tf::getYaw(quat);
+                    yaw = tf::getYaw(quat);
                     // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-                    // slope = convertDegree(yaw); 
-                    medianPoint = Point2f(tag_1.getOrigin().x() * 1000, 
-                            tag_1.getOrigin().y() * 1000);
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_1.getOrigin().x(), 
+                            tag_1.getOrigin().y());
+                }
+                if (marker == 2) {
+                    quatx = tag_2.getRotation().getX(); 
+                    quaty = tag_2.getRotation().getY();
+                    quatz = tag_2.getRotation().getZ();
+                    quatw = tag_2.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_2.getOrigin().x(), 
+                            tag_2.getOrigin().y());
+                }
+                if (marker == 3) {
+                    quatx = tag_3.getRotation().getX(); 
+                    quaty = tag_3.getRotation().getY();
+                    quatz = tag_3.getRotation().getZ();
+                    quatw = tag_3.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_3.getOrigin().x(), 
+                            tag_3.getOrigin().y());
+                }
+                if (marker == 4) {
+                    quatx = tag_4.getRotation().getX(); 
+                    quaty = tag_4.getRotation().getY();
+                    quatz = tag_4.getRotation().getZ();
+                    quatw = tag_4.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_4.getOrigin().x(), 
+                            tag_4.getOrigin().y());
+                }
+                if (marker == 5) {
+                    quatx = tag_5.getRotation().getX(); 
+                    quaty = tag_5.getRotation().getY();
+                    quatz = tag_5.getRotation().getZ();
+                    quatw = tag_5.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_5.getOrigin().x(), 
+                            tag_5.getOrigin().y());
+                }
+                if (marker == 6) {
+                    quatx = tag_6.getRotation().getX(); 
+                    quaty = tag_6.getRotation().getY();
+                    quatz = tag_6.getRotation().getZ();
+                    quatw = tag_6.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_6.getOrigin().x(), 
+                            tag_6.getOrigin().y());
+                }
+                if (marker == 7) {
+                    quatx = tag_7.getRotation().getX(); 
+                    quaty = tag_7.getRotation().getY();
+                    quatz = tag_7.getRotation().getZ();
+                    quatw = tag_7.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_7.getOrigin().x(), 
+                            tag_7.getOrigin().y());
                 }
                 (*iter).set_slope(slope);
                 (*iter).set_median_point(medianPoint);
@@ -177,6 +247,7 @@ int main(int argc, char** argv)
         	    //cout << "slope: " << slope << endl; 
     	        // cout << marker << " " << slope << "medianPoint: " 
              //            << medianPoint << endl;
+                // 62.1007medianPoint: [1.20331, 3.58019]
                 Car lastCar;
                 float speed = 0;
                 float angular = 0;
