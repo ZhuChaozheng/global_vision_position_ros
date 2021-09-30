@@ -60,7 +60,7 @@ public:
     queue<Point2f> navigateQueue;
     bool init_slope_flag_ = true;;
     float stop_flag_ = 0;
-    float cache_slope_array[21];
+    float cache_slope_array[10];
 
 public:
 	Car(int marker, float slope_P, float slope_I, 
@@ -77,7 +77,6 @@ public:
 			float target_point_y);
 	void update_parameters_slope_speed(float target_slope,
 			float target_speed);
-
 	//void stop_car(Car &car);
 //	void stop_cars(vector<Car> &car_set);
 

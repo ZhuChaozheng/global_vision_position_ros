@@ -6,7 +6,7 @@ add_library(GlobalVisionLibrary SHARED
 	file_operation.cc
 	navigation.cc
 )
-target_link_libraries(GlobalVisionLibrary ${THIRD_PARTY_LIBS} ${catkin_LIBRARIES})
+target_link_libraries(GlobalVisionLibrary ${THIRD_PARTY_LIBS} ${catkin_LIBRARIES} boid_model)
 
 #add_executable(map_pub map_pub.cc)
 #add_dependencies(map_pub ${${PROJECT_NAME}_EXPORTED_TARGETS}

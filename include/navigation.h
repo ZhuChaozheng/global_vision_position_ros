@@ -2,6 +2,8 @@
 #define NAVIGATION_H
 #include "car.h"
 
+#define PI 3.14159265
+
 /*
  * this function to realize navigating the specific point by
  * adjusting continually target slope and judging the distance.
@@ -13,6 +15,7 @@
  *
  */
 int NavigateTargetPoint(Car &car);
-
-
+float GetSlope(Point2f first, Point2f second);
+float GetPixelDistance(Point2f pointA, Point2f pointB);
+float convertDegree(double yaw);
 #endif //NAVIGATION_H

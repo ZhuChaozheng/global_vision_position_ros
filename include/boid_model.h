@@ -56,6 +56,8 @@ class Boid {
         float maxforce;    // Maximum steering force
         float maxspeed;    // Maximum speed
         bool IsLeader;    // Leader yes or no
+        float border_x;    // border x
+        float border_y;    // border y
 
         Boid(float, float, int, float, float);
 
@@ -136,7 +138,12 @@ extern "C"{
                 float* ob_pos_y, float* vel_x, float* vel_y,
                 float* vel_cmd, float* theta_cmd);
                 
-
+    void getFlockVelCmdBorder(int boids_num, float* border_x, float* border_y, float coeff_vel, 
+            float* pos_x, float* pos_y, 
+            float* tar_pos_x, float* tar_pos_y, float* tar_vel_x, float* tar_vel_y,
+            int obstacle_num, float* ob_pos_x, 
+            float* ob_pos_y, float* vel_x, float* vel_y,
+            float* vel_cmd, float* theta_cmd);
 }
 #endif
 

@@ -99,7 +99,7 @@ void udp::handle_udp_msg(int fd)
             temp_set.push_back(car);
         }
         cars_control_set_.swap(temp_set); // exchange vector
-        cout << "cars_control_set.size(): " << cars_control_set_.size() << endl;
+        // cout << "cars_control_set.size(): " << cars_control_set_.size() << endl;
     }
 }
 

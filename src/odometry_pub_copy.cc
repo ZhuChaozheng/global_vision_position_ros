@@ -67,64 +67,11 @@ void DeleteCar(Car& car, vector<Car>& carStateSet)
     }
 }
 
-float medium_filter(float input, float x[], int n)
-{
-    
-    
-    float sum = 0;
-    // update data through backforward 
-    for (int i = n - 1; i > 0; i--)
-    {
-        x[i] = x[i - 1];
-        sum += x[i];
-    }   
-    x[0] = input;
-    float average = (sum + x[0]) / n;
-    if (abs(average - x[0] < 30))
-        return x[0];
-    return average;
-    /*
-    if (x[n - 1] == 0)
-        return input;
-    // 输入缓冲区拷贝，排序会被打乱顺序
-    float x_copy[n] = {0};
-    memcpy(x_copy, x, sizeof(float) * n);
-    // 升序冒泡排序 
-    for (int j = 0; j < n - 1; j++)
-    {
-        for (int i = 0; i < n - j - 1; i++)
-        {
-            if (x_copy[i] > x_copy[i + 1])
-            {
-                float temp = x_copy[i];
-                x_copy[i] = x_copy[i + 1];
-                x_copy[i + 1] = temp;
-            }
-        }
-    }
-    for (int j = 0; j < n; j++)
-    {
-        sum = sum + x_copy[j];
-        cout << x_copy[j] << endl;
-    }
-    // remove max and min
-    sum = sum - x_copy[0] - x_copy[n - 1];
-    float average = sum / (n - 2);
-    x[0] = average;
-    cout << "after" << endl;
-    for (int j = 0; j < n; j++)
-    {
-        // x[j] = x_copy[j];
-        cout << x[j] << endl;
-    }
-    return average;*/
-}
-
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "odometry_pub");
     ros::NodeHandle n;    
-    ros::Rate rate(15); 
+    ros::Rate rate(20); 
     ros::Publisher odom_publisher_;
     vector<ros::Publisher> odom_publisher_set_;
     // init parameter of pid through rosparams
@@ -178,9 +125,9 @@ int main(int argc, char** argv)
             
             car_location.lookupTransform("hik_camera","tag_0",ros::Time(0),tag_0);
             car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
-            car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
-            // car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
-         /*   /car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
+            car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);/*
+            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
+            /car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
             car_location.lookupTransform("hik_camera","tag_5",ros::Time(0),tag_5);
             car_location.lookupTransform("hik_camera","tag_6",ros::Time(0),tag_6);
             car_location.lookupTransform("hik_camera","tag_7",ros::Time(0),tag_7);
@@ -224,7 +171,7 @@ int main(int argc, char** argv)
             	    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
                     yaw = tf::getYaw(quat);
                     // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-                    slope = convertDegree(yaw);
+                    slope = convertDegree(yaw); 
                     medianPoint = Point2f(tag_1.getOrigin().x(), 
                             tag_1.getOrigin().y());
                 }
@@ -239,19 +186,19 @@ int main(int argc, char** argv)
                      slope = convertDegree(yaw); 
                      medianPoint = Point2f(tag_2.getOrigin().x(), 
                              tag_2.getOrigin().y());
-                 }
-                // if (marker == 3) {
-                //     quatx = tag_3.getRotation().getX(); 
-                //     quaty = tag_3.getRotation().getY();
-                //     quatz = tag_3.getRotation().getZ();
-                //     quatw = tag_3.getRotation().getW();
-                //     quat = tf::Quaternion(quatx, quaty, quatz, quatw);
-                //     yaw = tf::getYaw(quat);
-                //     // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-                //     slope = convertDegree(yaw); 
-                //     medianPoint = Point2f(tag_3.getOrigin().x(), 
-                //             tag_3.getOrigin().y());
-                // }
+                 }/*
+                if (marker == 3) {
+                    quatx = tag_3.getRotation().getX(); 
+                    quaty = tag_3.getRotation().getY();
+                    quatz = tag_3.getRotation().getZ();
+                    quatw = tag_3.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_3.getOrigin().x(), 
+                            tag_3.getOrigin().y());
+                }*/
                 // if (marker == 4) {
                 //     quatx = tag_4.getRotation().getX(); 
                 //     quaty = tag_4.getRotation().getY();
@@ -302,19 +249,12 @@ int main(int argc, char** argv)
                 // }
                 
                 // 62.1007medianPoint: [1.20331, 3.58019]
-                
-                // if (marker == 0)
-                // {
-                //     float filter_slope = medium_filter(slope, (*iter).get_cache_slope_array(), 10);
-                //     cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << filter_slope << endl;
-                // }
-                    
                 Car lastCar;
                 float speed = 0;
                 float angular = 0;
                 if (Exist((*iter), carStateSet, lastCar))
                 {
-                    // cout << "j: " << j << endl;
+                    cout << "j: " << j << endl;
                     
                     Point2f lastMedianPoint = lastCar.get_median_point();
                     // cout << "lastMedianPoint: " << lastMedianPoint << endl;
@@ -341,19 +281,20 @@ int main(int argc, char** argv)
                     //         continue;
                     //     }
                     // }
+                    if (j == 5)
+                    {
+                        (*iter).set_slope(slope);
+                        (*iter).set_median_point(medianPoint);
+                        cout << "marker: " << marker << endl;
+                        //cout << "slope: " << slope << endl; 
+                        (*iter).set_speed(speed);
+                        if (marker == 2)
+                            cout << speed << endl;
+                        DeleteCar(lastCar, carStateSet);
+                    }
                     
-                    
-                    (*iter).set_slope(slope);
-                    (*iter).set_median_point(medianPoint);
-                    if (marker == 0)
-                        cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << " " << speed << endl; 
-                    // cout << "marker: " << marker << endl;
-                    //cout << "slope: " << slope << endl; 
-                    (*iter).set_speed(speed);
-                        // cout << medianPoint.x << " " << medianPoint.y << " " << slope << endl;
-                    DeleteCar(lastCar, carStateSet);
                 }
-                //cout << "carStateSet: " << carStateSet.size() << endl;
+                cout << "carStateSet: " << carStateSet.size() << endl;
                 carStateSet.push_back((*iter));
                 
                 // if the slope is 0, then the car may stay offline
@@ -400,7 +341,7 @@ int main(int argc, char** argv)
             j ++; 
         	currentTime = ros::Time::now();
         	consumeTime = currentTime.toSec() - lastTime.toSec();
-        	// cout << "odometry fps: " << 1/consumeTime << "Hz" << endl;
+        	cout << "odometry fps: " << 1/consumeTime << "Hz" << endl;
         	lastTime = currentTime;
             }
             catch(tf2::TransformException& ex) {

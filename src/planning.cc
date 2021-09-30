@@ -4,12 +4,14 @@
 #include "ros/ros.h"
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
+#include "navigation.h"
+#include <tf/transform_listener.h>
 using namespace std;
 
 /*
  * define data space
  */
-int boid_num = 10;
+int boid_num = 3;
 extern float *pos_x_array = new float[boid_num];
 extern float *pos_y_array = new float[boid_num];
 extern float *vel_x_array = new float[boid_num];
@@ -29,14 +31,17 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 {
 	  int i = marker;
     nav_msgs::Odometry robotOdometryMsg = *locator;
-  	ROS_INFO("robot Position: %f, %f", robotOdometryMsg.pose.pose.position.x,
-            robotOdometryMsg.pose.pose.position.y);
-  	ROS_INFO("robot Heading: linear:%f, angular:%f", robotOdometryMsg.twist.twist.linear.x,
-            robotOdometryMsg.twist.twist.angular.z);
-  	pos_x_array[i] = robotOdometryMsg.pose.pose.position.x;
-  	pos_y_array[i] = robotOdometryMsg.pose.pose.position.y;
-  	vel_x_array[i] = robotOdometryMsg.twist.twist.linear.x;
-  	vel_y_array[i] = robotOdometryMsg.twist.twist.linear.y;
+    if (i == 0)
+    {
+        ROS_INFO("marker: %d, robot Position: %f, %f", i, robotOdometryMsg.pose.pose.position.x,
+             robotOdometryMsg.pose.pose.position.y);
+        ROS_INFO("marker: %d, robot Heading: linear:%f, angular:%f", i, robotOdometryMsg.twist.twist.linear.x,
+             robotOdometryMsg.twist.twist.angular.z);    
+    }  	
+  	pos_x_array[i] = robotOdometryMsg.pose.pose.position.x * 100;
+  	pos_y_array[i] = robotOdometryMsg.pose.pose.position.y * 100;
+  	vel_x_array[i] = robotOdometryMsg.twist.twist.linear.x * 100;
+  	vel_y_array[i] = convertDegree(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  // vel_y -> yaw(0-360)
 }
 
 void* sub_spin(void* args) 
@@ -44,7 +49,7 @@ void* sub_spin(void* args)
     // create ros node handle
     ros::NodeHandle nh;   
     vector<ros::Subscriber> odom_sub_set_;
-    for (int i = 0; i <= 9; i ++)
+    for (int i = 0; i <= 2; i ++)
     {
         string front_str = "/odom_";
         stringstream ss;
@@ -52,7 +57,7 @@ void* sub_spin(void* args)
         ss << front_str << i;
         string topic = ss.str();
         ros::Subscriber odom_sub_ = nh.subscribe<nav_msgs::Odometry>(topic, 
-                100, boost::bind(&robotOdomCallback, _1, i));
+                25, boost::bind(&robotOdomCallback, _1, i));
         odom_sub_set_.push_back(odom_sub_);
     }
     ros::spin();
@@ -65,21 +70,24 @@ int main(int argc, char** argv)
     float *tar_pos_y_array = new float[boid_num];
     float *tar_vel_x_array = new float[boid_num];
     float *tar_vel_y_array = new float[boid_num];
+    float border_x=220.0, border_y=150.0, coeff_vel=7.0;
+
+
     /*
      * define target information
      *
      */
-    for (int i = 0; i <= 9; i ++)
+    for (int i = 0; i <= 1; i ++)
     {
-      tar_pos_x_array[i] = 1.23;
-      tar_pos_y_array[i] = 2.31;
-      tar_vel_x_array[i] = 0;
-      tar_vel_y_array[i] = 0;
+        tar_pos_x_array[i] = 200;
+        tar_pos_y_array[i] = 75;
+        tar_vel_x_array[i] = 7.5;
+        tar_vel_y_array[i] = 0;
     }
     /*
      * define obtacles
      */
-    int ob_num = 1;
+    int ob_num = 0;
     float ob_pos_x, ob_pos_y;
     float *ob_pos_x_array = new float[ob_num];
     float *ob_pos_y_array = new float[ob_num];
@@ -91,18 +99,20 @@ int main(int argc, char** argv)
         ob_pos_x_array[j] = ob_pos_x;
         ob_pos_y_array[j] = ob_pos_y;
     }
+
     ros::init(argc, argv, "planning");
   	// create ros node handle
   	ros::NodeHandle n;
-  	ros::Rate rate(30);  
+  	ros::Rate rate(25);  
     
     // ************ udp control interface thread *********
     pthread_t tids[1];
     int ret_sub_spin = pthread_create(&tids[0], NULL, sub_spin, NULL);
     if (ret_sub_spin != 0)
     {
-       cout << "pthread_create error at ret_udp: error_code=" << ret_sub_spin << endl;
+        cout << "pthread_create error at ret_udp: error_code=" << ret_sub_spin << endl;
     }
+    sleep(3);
     // ******* main thread ********
   	ros::Publisher vel_pub_;
   	vector<ros::Publisher> vel_pub_set_;
@@ -114,33 +124,101 @@ int main(int argc, char** argv)
         // construct topic '/marker1/cmd_vel'
         ss << front_str << i << end_str;
         string topic = ss.str();
-        vel_pub_ = n.advertise<geometry_msgs::Twist>(topic, 15);
+        vel_pub_ = n.advertise<geometry_msgs::Twist>(topic, 30);
         vel_pub_set_.push_back(vel_pub_);
     }
   	// loop
+    int index=0;
+
   	while(n.ok())
     {
-    		getFlockVelCmd(boid_num, pos_x_array, pos_y_array, 
-    	                tar_pos_x_array, tar_pos_y_array, tar_vel_x_array, tar_vel_y_array,
-    	                ob_num, ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array,
-    	                out_cmd_vel, out_theta_cmd);
+        printf("boid_num:%d\n",boid_num);
+        srand(time(NULL));
+        float current_angle, vel_x, vel_y;
+        printf("========================step:%d==============\n", index);
+        for(int k=0; k<boid_num; k++)
+        {
+            if(pos_x_array[k]>200.0)
+            {
+                tar_pos_x_array[k] = 0.0;
+                tar_pos_y_array[k] = 75.0;
+                tar_vel_x_array[k] = -7.5*coeff_vel;
+                tar_vel_y_array[k] = 0.0;
+            }
+
+            if(pos_x_array[k]<20.0)
+            {
+                tar_pos_x_array[k] = 200.0;
+                tar_pos_y_array[k] = 75.0;
+                tar_vel_x_array[k] = 7.5*coeff_vel;
+                tar_vel_y_array[k] = 0.0;
+            }
+            printf("id:%d\n",k);
+            printf("pos:[%f,%f]\n", pos_x_array[k], pos_y_array[k]);
+            printf("tar_pos:[%f,%f]\n", tar_pos_x_array[k], tar_pos_y_array[k]);
+
+            if ((vel_y_array[k]>=0.0)&&(vel_y_array[k]<180.0))
+                current_angle = -vel_y_array[k];
+            else
+                current_angle = 360.0 - vel_y_array[k];
+            printf("ros angel:%f, control angel:%f\n", vel_y_array[k], current_angle);
+            printf("ros vel:%f\n", vel_x_array[k]);
+            current_angle *= 3.1415926/180.0;
+
+            vel_x = vel_x_array[k]*sin(current_angle);
+            vel_y = vel_x_array[k]*cos(current_angle);
+                            // random speed
+            vel_x_array[k] = vel_x;
+            vel_y_array[k] = vel_y;
+            printf("vel:[%f,%f]\n", vel_x_array[k], vel_y_array[k]);
+            printf("tar_vel:[%f,%f]\n", tar_vel_x_array[k], tar_vel_y_array[k]);
+        }
+		// getFlockVelCmd(boid_num, pos_x_array, pos_y_array, 
+	 //                tar_pos_x_array, tar_pos_y_array, tar_vel_x_array, tar_vel_y_array,
+	 //                ob_num, ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array,
+	 //                out_cmd_vel, out_theta_cmd);
+        getFlockVelCmdBorder(boid_num, &border_x, &border_y, coeff_vel, 
+            pos_x_array, pos_y_array, 
+            tar_pos_x_array, tar_pos_y_array, tar_vel_x_array, tar_vel_y_array,
+            ob_num, ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array,
+            out_cmd_vel, out_theta_cmd);
+        
+
     		// convert out_cmd_vel, out_theta_cmd to /cmd_vel
     		// for(int i = 0, auto vel_pub = vel_pub_set_.begin(); 
-      //           vel_pub != vel_pub_set_.end();)
+        //           vel_pub != vel_pub_set_.end();)
+        //return 0;
+        index++;
+        int i = 0;
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
         {
-            int i = 0;
-            geometry_msgs::Twist twist;
-    		  	twist.linear.x = out_cmd_vel[i];
-    		  	twist.linear.y = 0;
-    		  	twist.angular.z = out_theta_cmd[i];
-    		  	(*vel_pub).publish(twist); 
-            vel_pub ++;
-            i ++;
+            if (out_cmd_vel[i] == 0)
+            {
+                vel_pub ++;
+                i ++;
+                continue;
+            }
+            else
+            {
+                geometry_msgs::Twist twist;
+                twist.linear.x = out_cmd_vel[i] / 100.0;
+                twist.linear.y = 0;
+                // convert orientation
+                if (out_theta_cmd[i] <= 0)
+                    out_theta_cmd[i] = -out_theta_cmd[i];
+                else
+                    out_theta_cmd[i] = 360.0 - out_theta_cmd[i];
+                twist.angular.z = out_theta_cmd[i];
+                if (i == 2)
+                    cout << "out_cmd_vel: " << out_cmd_vel[i] << "out_theta_cmd: " << out_theta_cmd[i] << endl;
+                (*vel_pub).publish(twist);
+                vel_pub ++;
+                i ++;
+            }            
+            
         }
     		rate.sleep();
   	}
   	return 0;
 }
-	

@@ -249,7 +249,6 @@ void pid::controlSpeedAndAngular(Car &car)
      // cout << "error_move: " << error_move << endl;
     // set a minimax value
    //if (abs(error_move) < 1) return;
-    // cout << "target_speed: " << target_speed << endl;
     // cout << "currentSpeed: " << currentSpeed << endl;
     // Normalized on specifical value, here is 1m
   //  error_move /= 1000;
@@ -273,7 +272,12 @@ void pid::controlSpeedAndAngular(Car &car)
     }
     if (target_speed == 0)
         wp_move_ = 0;
-    // cout<<"wp_move_"<<wp_move_<<endl;
+    if (car.get_marker() == 1)
+    {
+        cout<<"wp_move_"<<wp_move_<<endl;
+        cout << "target_speed: " << target_speed << endl;
+    }
+     
     //wp_move_=-500;
     float duty_left = -wp_angel_/2 + (int)wp_move_; 
     duty_left *= -1;
@@ -323,46 +327,4 @@ void pid::controlSpeedAndAngular(Car &car)
     }
     // send data through udp
     udp_comm.send_data(sock_fd, a, sizeof(a));
-    /*
-     * 11
-4
-44
-3
-ffffff8c
-22
-
-11
-4
-5e
-3
-72
-22
-
-*/
-    /*
-     11
-1
-30
-ffffffff
-39
-22
-
-11
-0
-ffffffe1
-fffffffe
-ffffffe2
-22
-
-
-11
-1
-53
-fffffffe
-ffffff84
-22
-*/
-
-
-
 }

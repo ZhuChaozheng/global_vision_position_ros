@@ -69,8 +69,7 @@ float k_dy = 0.3;
 // Those two variables belong to extern, 
 // and defined in image_process.h
 int frame_type;
-RotatedRect boundary_rect = RotatedRect(Point2f(100,100),
-        Size2f(500,500), 0);
+RotatedRect boundary_rect;
 /* 
  * wait for the signal keyboard of ctrl+c
  */
@@ -82,7 +81,6 @@ void sigint_handler(int sig)
         app_stopped = true;
     }
 }
-
 /**
  *
  * search the corresponding car in the set of car
@@ -118,7 +116,6 @@ void DeleteCar(Car& car, vector<Car>& carStateSet)
         iter ++;
     }
 }
-
 
 /*
  *
@@ -172,33 +169,33 @@ void coordination_move(vector<Car> &car_alive_set, float dx,
 /*
         float x_ij = (*iter).get_median_point().x - 
                 (*(iter+1)).get_median_point().x;
-	cout << "x_ij: " << x_ij << endl;
+    cout << "x_ij: " << x_ij << endl;
         float y_ij = (*iter).get_median_point().y - 
                 (*(iter+1)).get_median_point().y;
-	cout << "y_ij: " << y_ij << endl;
+    cout << "y_ij: " << y_ij << endl;
         // calculate the real speed on x, y direction
         float v_rx = k_dx * (x_ij - dx) + v_ex;
         float v_ry = k_dy * (y_ij - dy) + v_ey;
         // send command value
         float speed = sqrt(pow(v_rx, 2)+pow(v_ry, 2));
         float slope = asin (v_ry / speed);
-	cout << "real speed: " << speed << endl;
-	cout << "real slope: " << slope << endl;
+    cout << "real speed: " << speed << endl;
+    cout << "real slope: " << slope << endl;
 */
-	float v_ij = (*iter).get_speed() - k_dx * ((*(iter+1)).get_speed() - (*iter).get_speed());
-//	cout << "v_ij: " << v_ij << endl;
-	for (auto iter_car = car_set.begin(); iter_car != car_set.end();)
+    float v_ij = (*iter).get_speed() - k_dx * ((*(iter+1)).get_speed() - (*iter).get_speed());
+//  cout << "v_ij: " << v_ij << endl;
+    for (auto iter_car = car_set.begin(); iter_car != car_set.end();)
     {
-	    if ((*iter_car).get_marker() == (*(iter+1)).get_marker())
+        if ((*iter_car).get_marker() == (*(iter+1)).get_marker())
         {  
     /*
-    		(*iter_car).set_target_speed(speed);
-    		(*iter_car).set_target_slope(slope);
+            (*iter_car).set_target_speed(speed);
+            (*iter_car).set_target_slope(slope);
     */
-    		(*iter_car).set_target_speed(v_ij);
-	    }
-	     iter_car ++;
-	}
+            (*iter_car).set_target_speed(v_ij);
+        }
+         iter_car ++;
+    }
         iter ++;
     }
 }
@@ -248,12 +245,12 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
 
 void* sub_spin(void* args) 
 {
-	// create ros node handle
-	ros::NodeHandle n;
-    	ros::Subscriber sub = n.subscribe("comm", 
+    // create ros node handle
+    ros::NodeHandle n;
+        ros::Subscriber sub = n.subscribe("comm", 
             1000, comm_call_back);
-	ros::spin();
-	return 0;
+    ros::spin();
+    return 0;
 }
 
 /*
@@ -275,7 +272,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc,argv,"car_location");
     ros::NodeHandle n;
-    ros::Rate rate(30);  
+    ros::Rate rate(20);  
     tf::TransformListener car_location;
     
     //用来保存寻找到的坐标变换数据
@@ -319,19 +316,6 @@ int main(int argc, char** argv)
     lastTime = ros::Time::now();
     // build a car alive set based on slope, once it is not zero
     vector<Car> car_alive_set;
-
-    Point2f p1 = Point2f(100, 200);
-    Point2f p2 = Point2f(200, 200);
-    Point2f p3 = Point2f(300, 200);
-    Point2f p4 = Point2f(400, 200);
-    for (auto iter = car_set.begin(); iter != car_set.end();)
-    {
-        (*iter).navigateQueue.push(p1);
-        (*iter).navigateQueue.push(p2);
-        (*iter).navigateQueue.push(p3);
-        (*iter).navigateQueue.push(p4);
-    }
-
     while(n.ok())
     {
 
@@ -339,153 +323,133 @@ int main(int argc, char** argv)
         try
         {
             //寻找坐标变换
-          
+            
             car_location.lookupTransform("hik_camera","tag_0",ros::Time(0),tag_0);
             car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
             car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
-            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);/*
-            car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
+            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
+            /*car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
             car_location.lookupTransform("hik_camera","tag_5",ros::Time(0),tag_5);
             car_location.lookupTransform("hik_camera","tag_6",ros::Time(0),tag_6);
-/*
             car_location.lookupTransform("hik_camera","tag_7",ros::Time(0),tag_7);
             car_location.lookupTransform("hik_camera","tag_8",ros::Time(0),tag_8);
-            car_location.lookupTransform("hik_camera","tag_9",ros::Time(0),tag_9);
+   /*         car_location.lookupTransform("hik_camera","tag_9",ros::Time(0),tag_9);
   */          
             vector<Car> cars_control_set = udp_server.get_cars_control_set();
             // cout << cars_control_set.size() << endl;
             if(cars_control_set.size() == 10)
-        	{
+            {
                 hardware_control_interface(cars_control_set);
-        	    udp_server.erase_cars_control_set();
-        	}
+                udp_server.erase_cars_control_set();
+            }
             if (app_stopped) break;
      
             for (auto iter = car_set.begin(); iter != car_set.end();)
             {
                 float target_slope = (*iter).get_target_slope();
                 // Point2f medianPoint = (*iter).get_median_point();
+
                 //Point2f medianPoint = Point2f(0, 0);
                 int marker = (*iter).get_marker();
+                // cout << marker << " current point: " << medianPoint << endl;
                 //    float slope = (*iter).get_slope();
                 // Point3f targetPoint = (*iter).get_target();
                 Point2f target_point = (*iter).get_target_point();
-        	    float target_speed = (*iter).get_target_speed();
-    	        // float speed = (*iter).get_speed();
-    	        double quatx, quaty, quatz, quatw;
+                float target_speed = (*iter).get_target_speed();
+                // float speed = (*iter).get_speed();
+                double quatx, quaty, quatz, quatw;
                 double roll, pitch, yaw; // save roll pitch yaw
                 float slope;
                 Point2f medianPoint;
+                if (marker == 0) {
+                    quatx = tag_0.getRotation().getX(); 
+                    quaty = tag_0.getRotation().getY();
+                    quatz = tag_0.getRotation().getZ();
+                    quatw = tag_0.getRotation().getW();
+                    medianPoint = Point2f(tag_0.getOrigin().x(), tag_0.getOrigin().y());
+                }
 
                 if (marker == 1) {
-            	    quatx = tag_1.getRotation().getX(); 
+                    quatx = tag_1.getRotation().getX(); 
                     quaty = tag_1.getRotation().getY();
                     quatz = tag_1.getRotation().getZ();
                     quatw = tag_1.getRotation().getW();
-            	    tf::Quaternion quat(quatx, quaty, quatz, quatw);
-                        
-                    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-                    slope = convertDegree(yaw); 
-                    medianPoint = Point2f(tag_1.getOrigin().x() * 1000, tag_1.getOrigin().y() * 1000);
-                /*
-                	    ROS_INFO("tag_1:Tx=%.2f,Ty=%.2f,Tz=%.2f, yaw=%.2f ",
-                            tag_1.getOrigin().x(),
-                            tag_1.getOrigin().y(),
-                            tag_1.getOrigin().z(), slope);*/
+                    medianPoint = Point2f(tag_1.getOrigin().x(), tag_1.getOrigin().y());
                 }
-
                 if (marker == 2) {
-                	    quatx = tag_2.getRotation().getX();
-                            quaty = tag_2.getRotation().getY();
-                            quatz = tag_2.getRotation().getZ();
-                            quatw = tag_2.getRotation().getW();
-                	    tf::Quaternion quat2(quatx, quaty, quatz, quatw);
-                            //double roll, pitch, yaw; // save roll pitch yaw
-                            tf::Matrix3x3(quat2).getRPY(roll, pitch, yaw);//convert
-                            slope = convertDegree(yaw); 
-                medianPoint = Point2f(tag_2.getOrigin().x() * 1000, tag_2.getOrigin().y() * 1000);
-                	    /*ROS_INFO("tag_2:Tx=%.2f,Ty=%.2f,Tz=%.2f, yaw=%.2f ",
-                            tag_2.getOrigin().x(),
-                            tag_2.getOrigin().y(),
-                            tag_2.getOrigin().z(), slope);
-                	 */
+                    quatx = tag_2.getRotation().getX();
+                    quaty = tag_2.getRotation().getY();
+                    quatz = tag_2.getRotation().getZ();
+                    quatw = tag_2.getRotation().getW();
+                    medianPoint = Point2f(tag_2.getOrigin().x(), tag_2.getOrigin().y());
                 }
                 if (marker == 3) {
-                	    quatx = tag_3.getRotation().getX();
-                            quaty = tag_3.getRotation().getY();
-                            quatz = tag_3.getRotation().getZ();
-                            quatw = tag_3.getRotation().getW();
-                	    tf::Quaternion quat3(quatx, quaty, quatz, quatw);
-                            //double roll, pitch, yaw; // save roll pitch yaw
-                            tf::Matrix3x3(quat3).getRPY(roll, pitch, yaw);//convert
-                            slope = convertDegree(yaw); 
-                medianPoint = Point2f(tag_3.getOrigin().x() * 1000, tag_3.getOrigin().y() * 1000);
-                	    /*ROS_INFO("tag_3:Tx=%.2f,Ty=%.2f,Tz=%.2f, yaw=%.2f ",
-                            tag_3.getOrigin().x(),
-                            tag_3.getOrigin().y(),
-                            tag_3.getOrigin().z(), slope);*/
+                    quatx = tag_3.getRotation().getX();
+                    quaty = tag_3.getRotation().getY();
+                    quatz = tag_3.getRotation().getZ();
+                    quatw = tag_3.getRotation().getW();
+                    medianPoint = Point2f(tag_3.getOrigin().x(), tag_3.getOrigin().y());
+                }/*
+          if (marker == 4) {
+                    quatx = tag_4.getRotation().getX();
+                    quaty = tag_4.getRotation().getY();
+                    quatz = tag_4.getRotation().getZ();
+                    quatw = tag_4.getRotation().getW();
+                    medianPoint = Point2f(tag_4.getOrigin().x(), tag_4.getOrigin().y());
                 }
-                /*
-                if (marker == 4) {
-                	    quatx = tag_4.getRotation().getX();
-                            quaty = tag_4.getRotation().getY();
-                            quatz = tag_4.getRotation().getZ();
-                            quatw = tag_4.getRotation().getW();
-                	    tf::Quaternion quat4(quatx, quaty, quatz, quatw);
-                            //double roll, pitch, yaw; // save roll pitch yaw
-                            tf::Matrix3x3(quat4).getRPY(roll, pitch, yaw);//convert
-                            slope = convertDegree(yaw); 
-                	    /*ROS_INFO("tag_4:Tx=%.2f,Ty=%.2f,Tz=%.2f, yaw=%.2f ",
-                            tag_4.getOrigin().x(),
-                            tag_4.getOrigin().y(),
-                            tag_4.getOrigin().z(), slope);
-                            medianPoint = Point2f(tag_4.getOrigin().x() * 1000, tag_4.getOrigin().y() * 1000);
+ if (marker == 5) {
+                    quatx = tag_5.getRotation().getX();
+                    quaty = tag_5.getRotation().getY();
+                    quatz = tag_5.getRotation().getZ();
+                    quatw = tag_5.getRotation().getW();
+                    medianPoint = Point2f(tag_5.getOrigin().x(), tag_5.getOrigin().y());
                 }
-                if (marker == 6) {
-                	    quatx = tag_6.getRotation().getX();
-                            quaty = tag_6.getRotation().getY();
-                            quatz = tag_6.getRotation().getZ();
-                            quatw = tag_6.getRotation().getW();
-                	    tf::Quaternion quat6(quatx, quaty, quatz, quatw);
-                            //double roll, pitch, yaw; // save roll pitch yaw
-                            tf::Matrix3x3(quat6).getRPY(roll, pitch, yaw);//convert
-                            slope = convertDegree(yaw); 
-                medianPoint = Point2f(tag_6.getOrigin().x() * 1000, tag_6.getOrigin().y() * 1000);
-
-                	    /*ROS_INFO("tag_0:Tx=%.2f,Ty=%.2f,Tz=%.2f, yaw=%.2f ",
-                            tag_0.getOrigin().x(),
-                            tag_0.getOrigin().y(),
-                            tag_0.getOrigin().z(), slope);
+ if (marker == 6) {
+                    quatx = tag_6.getRotation().getX();
+                    quaty = tag_6.getRotation().getY();
+                    quatz = tag_6.getRotation().getZ();
+                    quatw = tag_6.getRotation().getW();
+                    medianPoint = Point2f(tag_6.getOrigin().x(), tag_6.getOrigin().y());
+                }
+ if (marker == 7) {
+                    quatx = tag_7.getRotation().getX();
+                    quaty = tag_7.getRotation().getY();
+                    quatz = tag_7.getRotation().getZ();
+                    quatw = tag_7.getRotation().getW();
+                    medianPoint = Point2f(tag_7.getOrigin().x(), tag_7.getOrigin().y());
+                }
+ if (marker == 8) {
+                    quatx = tag_8.getRotation().getX();
+                    quaty = tag_8.getRotation().getY();
+                    quatz = tag_8.getRotation().getZ();
+                    quatw = tag_8.getRotation().getW();
+                    medianPoint = Point2f(tag_8.getOrigin().x(), tag_8.getOrigin().y());
                 }*/
+                tf::Quaternion quat(quatx, quaty, quatz, quatw);                        
+                tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                slope = convertDegree(yaw); 
                 (*iter).set_slope(slope);
                 (*iter).set_median_point(medianPoint);
-        	    //cout << "marker: " << marker << endl;
-        	    //cout << "slope: " << slope << endl; 
-    	        cout << marker << " " << slope << "medianPoint: " 
-                        << medianPoint << endl;
-        	    // cout << "target_slope: " << target_slope << endl;
-        	    // cout << "medianPoint: " << medianPoint << endl;
-        	    //cout << "target_point: " << target_point << endl;
-        	    //cout << "target_speed: " << target_speed << endl;
-                // if (marker == 0) 
-                // {
-                //     if (!(*iter).navigateQueue.empty()) 
-                //     {
-                //         Point2f temp = (*iter).navigateQueue.front();
-                //         cout << temp << endl;
-                //         //(*iter).set_target_point(temp);
-                //         (*iter).navigateQueue.pop(); // delete front point
-                //        // (*iter).navigateQueue.push_back(temp); // insert front point into end 
-                //     }
-                // }
+                //cout << "marker: " << marker << endl;
+                //cout << "slope: " << slope << endl;
+                if ( marker == 1) 
+                {float gcspeed = (*iter).get_speed();
+                    float target_speed = (*iter).get_target_speed();
+                 cout << marker << "SLOPE:=== " << slope << " " << gcspeed << "target_speed: " << target_speed << "medianPoint: " << medianPoint << endl;
+            }
+                // cout << "target_slope: " << target_slope << endl;
+                //cout << "medianPoint: " << medianPoint << endl;
+                //cout << "target_point: " << target_point << endl;
+                //cout << "target_speed: " << target_speed << endl;
+                
             // ***************** Navigation Step ********************            
             if (NavigateTargetPoint(*iter) == 0) // reach target
                 // assign next target
                 if (!(*iter).navigateQueue.empty()) 
                 {
                     Point2f temp = (*iter).navigateQueue.front();
-                    cout << temp << endl;
-                    // (*iter).set_target_point(temp);
+                    cout << marker << " target point: " << temp << endl;
+                    (*iter).set_target_point(temp);
                     (*iter).navigateQueue.pop(); // delete front point
                    // (*iter).navigateQueue.push_back(temp); // insert front point into end 
                 }
@@ -494,13 +458,18 @@ int main(int argc, char** argv)
                 if (Exist((*iter), carStateSet, lastCar))
                 {
                     Point2f lastMedianPoint = lastCar.get_median_point();
-                    // cout << "lastMedianPoint: " << lastMedianPoint << endl;
+                    if (marker == 2)
+                    {                        
+                        float target_speed = (*iter).get_target_speed();
+                        cout << "2  target_speed: " << target_speed << endl;
+                    }
                     float lastSlope = lastCar.get_slope();
                     float lastspeed = (*iter).get_speed();
-    		        float speed = sqrt(pow(medianPoint.x - 
+                    float speed = sqrt(pow(medianPoint.x - 
                             lastMedianPoint.x, 2) + pow(medianPoint.y - 
                             lastMedianPoint.y, 2)) / consumeTime;              
                     (*iter).set_speed(speed);
+                     // cout << marker << " " << speed << endl;
                     DeleteCar(*iter, carStateSet);
                     // TODO
                     /*
@@ -515,26 +484,28 @@ int main(int argc, char** argv)
                 }
                 carStateSet.push_back((*iter));
                 // if the slope is 0, then the car may stay offline
-        	    if (slope != 0)
+                if (slope != 0)
                          car_alive_set.push_back(*iter);
                     iter ++;
             }   
-        	currentTime = ros::Time::now();
-        	consumeTime = currentTime.toSec() - lastTime.toSec();
-        	delay_sec = main_period_sec - consumeTime;
-        	if(delay_sec>0){
-        	    ros::Duration(delay_sec).sleep();
-    	    }
-        	currentTime = ros::Time::now();
-        	consumeTime = currentTime.toSec() - lastTime.toSec();
-        	//cout << "main fps: " << 1/consumeTime << "Hz" << endl;
-        	lastTime = currentTime;
+            /*currentTime = ros::Time::now();
+            consumeTime = currentTime.toSec() - lastTime.toSec();
+            delay_sec = main_period_sec - consumeTime;
+            if(delay_sec>0){
+                ros::Duration(delay_sec).sleep();
+            }
+            */
+            currentTime = ros::Time::now();
+            consumeTime = currentTime.toSec() - lastTime.toSec();
+            cout << "main fps: " << 1/consumeTime << "Hz" << endl;
+            lastTime = currentTime;
+            
             }
             catch(tf2::TransformException& ex)
             {
-                    ROS_ERROR("%s", ex.what());
-                    ros::Duration(1.0).sleep();
-                    continue;
+                ROS_ERROR("%s", ex.what());
+                ros::Duration(1.0).sleep();
+                continue;
             }
             rate.sleep();
         }

@@ -19,9 +19,9 @@ int main(int argc, char **argv)
    // for(int i = 0; i <= 9; i ++)
 	   // point.x point.y speed    slope  stop_flag
     ss << " \
-    0 0 0 270 0 \
-    0 0 0 270 0 \
-    0 0 0 270 0 \
+    0 0 3 270 0 \
+    0 0 3 270 0 \
+    0 0 3 270 0 \
     0 0 0 270 0 \
     0 0 0 270 0 \
     0 0 0 270 0 \
