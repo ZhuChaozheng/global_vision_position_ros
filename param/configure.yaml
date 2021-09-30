@@ -55,7 +55,7 @@ slope_d_2: 0
 speed_p_2: 0
 speed_i_2: 0
 speed_d_2: 0
-target_slope_2: 0
+target_slope_2: 180
 target_speed_2: 0
 target_point_x_2: 0
 target_point_y_2: 0

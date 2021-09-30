@@ -308,7 +308,6 @@ int main(int argc, char** argv)
                 //     float filter_slope = medium_filter(slope, (*iter).get_cache_slope_array(), 10);
                 //     cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << filter_slope << endl;
                 // }
-                    
                 Car lastCar;
                 float speed = 0;
                 float angular = 0;

@@ -72,7 +72,6 @@ void hardware_control_interface(vector<Car> &cars_control_set)
     }
 }
 
-
 /**
  * This tutorial demonstrates simple receipt of messages over the ROS system.
  */
@@ -114,7 +113,6 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
     // send data through udp
     udp_comm.send_data(sock_fd, src, sizeof(src));
 }
-
 
 /**
  * This tutorial demonstrates simple receipt of messages over the ROS system.
@@ -233,7 +231,6 @@ int main(int argc, char** argv)
     }
     // **************** main thread *********************
     ConfigParamtersRead(car_set);
-
     double consumeTime;
     ros::Time currentTime,lastTime;
     lastTime = ros::Time::now();
@@ -246,7 +243,6 @@ int main(int argc, char** argv)
             hardware_control_interface(cars_control_set);
             udp_server.erase_cars_control_set();
         }
-
         for (auto iter = car_set.begin(); iter != car_set.end();)
         {
             int marker = (*iter).get_marker();

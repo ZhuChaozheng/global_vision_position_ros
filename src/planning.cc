@@ -29,7 +29,7 @@ float *out_theta_cmd = new float[boid_num];
  */
 void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 {
-	  int i = marker;
+	int i = marker;
     nav_msgs::Odometry robotOdometryMsg = *locator;
     if (i == 0)
     {
@@ -216,7 +216,6 @@ int main(int argc, char** argv)
                 vel_pub ++;
                 i ++;
             }            
-            
         }
     		rate.sleep();
   	}
