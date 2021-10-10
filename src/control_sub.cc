@@ -154,7 +154,7 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 
             slope = convertDegree(tf::getYaw(robotOdometryMsg.pose.pose.orientation));
 
-            cout << "control: " << i << " slope: " << slope << endl;
+            // cout << "control: " << i << " slope: " << slope << endl;
             medianPoint.x = robotOdometryMsg.pose.pose.position.x;
             medianPoint.y = robotOdometryMsg.pose.pose.position.y;
             speed = robotOdometryMsg.twist.twist.linear.x;
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
     while(n.ok())
     {
         vector<Car> cars_control_set = udp_server.get_cars_control_set();
-        // cout << cars_control_set.size() << endl;
+        cout << cars_control_set.size() << endl;
         if(cars_control_set.size() == 10)
         {
             hardware_control_interface(cars_control_set);
@@ -248,7 +248,31 @@ int main(int argc, char** argv)
             int marker = (*iter).get_marker();
             float slope = (*iter).get_slope();
             float speed =  (*iter).get_speed();
-            cout << marker << " ,receive: " << slope << endl;
+            // ***************** rebound ************
+            Point2f medianPoint = (*iter).get_median_point();
+            if (medianPoint.x > 2.0 | medianPoint.y > 1.50 | medianPoint.x < 0.2 |
+                        medianPoint.y < 0.1)
+            {
+                //cout << (*iter).get_init_slope_flag() << endl;
+                if ((*iter).get_init_slope_flag())
+                {
+                    (*iter).set_init_slope_flag(false);
+                    (*iter).set_target_slope(slope + 180);
+                }
+            }
+            else
+                (*iter).set_init_slope_flag(true);
+            if (marker == 2){
+                float Tar_slope = (*iter).get_target_slope();
+                float Now_slope = (*iter).get_slope();
+                cout << "marker" << endl;
+                cout << "Tar slope:";
+                cout << Tar_slope << endl;
+                cout << "Now slope:";
+                cout << slope << endl;
+            }
+            // *******************end rebound******************
+            // cout << marker << " ,receive: " << slope << endl;
             // ***************** Navigation Step ********************            
             if (NavigateTargetPoint(*iter) == 0) // reach target
                 // assign next target
@@ -266,7 +290,7 @@ int main(int argc, char** argv)
         }
         currentTime = ros::Time::now();
         consumeTime = currentTime.toSec() - lastTime.toSec();
-        cout << "control_sub fps: " << 1/consumeTime << "Hz" << endl;
+        // cout << "control_sub fps: " << 1/consumeTime << "Hz" << endl;
         lastTime = currentTime;
         rate.sleep();
     }

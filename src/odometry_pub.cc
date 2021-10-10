@@ -14,7 +14,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <ctype.h>                                                                                                
 #include <sys/time.h>
 #include <signal.h>
 #include <opencv2/plot.hpp>
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "odometry_pub");
     ros::NodeHandle n;    
-    ros::Rate rate(15); 
+    ros::Rate rate(20); 
     ros::Publisher odom_publisher_;
     vector<ros::Publisher> odom_publisher_set_;
     // init parameter of pid through rosparams
@@ -135,6 +135,7 @@ int main(int argc, char** argv)
     // batch initilization the topic vector
     for (auto iter = car_set.begin(); iter != car_set.end();)
     {
+        
         int marker = (*iter).get_marker();
         cout << marker << endl;
         string front_str = "/odom_";
@@ -175,11 +176,10 @@ int main(int argc, char** argv)
         try
         {
             //寻找坐标变换
-            
             car_location.lookupTransform("hik_camera","tag_0",ros::Time(0),tag_0);
             car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
             car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
-            // car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
+            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
          /*   /car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
             car_location.lookupTransform("hik_camera","tag_5",ros::Time(0),tag_5);
             car_location.lookupTransform("hik_camera","tag_6",ros::Time(0),tag_6);
@@ -189,9 +189,11 @@ int main(int argc, char** argv)
      
             for (auto iter = car_set.begin(); iter != car_set.end();)
             {
+                
                 float target_slope = (*iter).get_target_slope();
                 // Point2f medianPoint = (*iter).get_median_point();
                 //Point2f medianPoint = Point2f(0, 0);
+
                 int marker = (*iter).get_marker();
                 //    float slope = (*iter).get_slope();
                 // Point3f targetPoint = (*iter).get_target();
@@ -203,6 +205,7 @@ int main(int argc, char** argv)
                 double roll, pitch, yaw; // save roll pitch yaw
                 float slope;
                 Point2f medianPoint;
+
 
                 if (marker == 0) {
                     quatx = tag_0.getRotation().getX(); 
@@ -240,18 +243,18 @@ int main(int argc, char** argv)
                      medianPoint = Point2f(tag_2.getOrigin().x(), 
                              tag_2.getOrigin().y());
                  }
-                // if (marker == 3) {
-                //     quatx = tag_3.getRotation().getX(); 
-                //     quaty = tag_3.getRotation().getY();
-                //     quatz = tag_3.getRotation().getZ();
-                //     quatw = tag_3.getRotation().getW();
-                //     quat = tf::Quaternion(quatx, quaty, quatz, quatw);
-                //     yaw = tf::getYaw(quat);
-                //     // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-                //     slope = convertDegree(yaw); 
-                //     medianPoint = Point2f(tag_3.getOrigin().x(), 
-                //             tag_3.getOrigin().y());
-                // }
+                if (marker == 3) {
+                    quatx = tag_3.getRotation().getX(); 
+                    quaty = tag_3.getRotation().getY();
+                    quatz = tag_3.getRotation().getZ();
+                    quatw = tag_3.getRotation().getW();
+                    quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+                    yaw = tf::getYaw(quat);
+                    // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+                    slope = convertDegree(yaw); 
+                    medianPoint = Point2f(tag_3.getOrigin().x(), 
+                            tag_3.getOrigin().y());
+                }
                 // if (marker == 4) {
                 //     quatx = tag_4.getRotation().getX(); 
                 //     quaty = tag_4.getRotation().getY();
@@ -322,30 +325,10 @@ int main(int argc, char** argv)
                             lastMedianPoint.x, 2) + pow(medianPoint.y - 
                             lastMedianPoint.y, 2)) / consumeTime; 
                     angular = (slope - lastSlope) / consumeTime;
-                    bool initial_flag = (*iter).get_init_slope_flag();
-                    // if (initial_flag)
-                    // {
-                    //     if (abs(angular) > 100)
-                    //     {
-                    //         cout << "here!!" << endl;
-                    //         (*iter).set_init_slope_flag(false); // false = 0, true = 1
-                    //     }
-                    // }                        
-                    // else
-                    // {
-                    //     if (abs(angular) > 300)
-                    //     {
-                    //         // cout << marker << ",,@@@!,, slope: " << slope << ", lastSlope: " 
-                    //         //     << lastSlope << ", angular:" << angular << endl;
-                    //         continue;
-                    //     }
-                    // }
-                    
+                    bool initial_flag = (*iter).get_init_slope_flag();                   
                     
                     (*iter).set_slope(slope);
                     (*iter).set_median_point(medianPoint);
-                    if (marker == 0)
-                        cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << " " << speed << endl; 
                     // cout << "marker: " << marker << endl;
                     //cout << "slope: " << slope << endl; 
                     (*iter).set_speed(speed);
@@ -358,7 +341,11 @@ int main(int argc, char** argv)
                 // if the slope is 0, then the car may stay offline
         	    if (slope != 0)
                     car_alive_set.push_back(*iter);
-
+                if (marker == 0)
+                    cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << " " << speed << endl;
+                if (speed < 0)
+                    return 0;
+                    
                 nav_msgs::Odometry odom;
                 odom.header.stamp = currentTime;
                 odom.header.frame_id = "odom";

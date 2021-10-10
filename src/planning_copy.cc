@@ -6,10 +6,6 @@
 #include <geometry_msgs/Twist.h>
 #include "navigation.h"
 #include <tf/transform_listener.h>
-#include <time.h>
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
 using namespace std;
 
 /*
@@ -34,21 +30,21 @@ float *out_theta_cmd = new float[boid_num];
  */
 void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 {
-    int i = marker;
-    nav_msgs::Odometry robotOdometryMsg = *locator;
-    // if (i == 0)
-    // {
-    //     ROS_INFO("marker: %d, robot Position: %f, %f", i, robotOdometryMsg.pose.pose.position.x,
-    //          robotOdometryMsg.pose.pose.position.y);
-    //     ROS_INFO("marker: %d, robot Heading: linear:%f, angular:%f", i, robotOdometryMsg.twist.twist.linear.x,
-    //          robotOdometryMsg.twist.twist.angular.z);    
-    // }   
-    cout << "%d" << i << " vel: " << vel_x_array[i] << endl;
-    pos_x_array[i] = robotOdometryMsg.pose.pose.position.x * 100;
-    pos_y_array[i] = robotOdometryMsg.pose.pose.position.y * 100;
-    vel_x_array[i] = robotOdometryMsg.twist.twist.linear.x * 100;
-    cout << "%d" << i << " vel: " << vel_x_array[i] << endl;
-    vel_y_array[i] = convertDegree(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  // vel_y -> yaw(0-360)    
+        int k = marker;
+        nav_msgs::Odometry robotOdometryMsg = *locator;
+        if (k == 0)
+        {
+            ROS_INFO("marker: %d, robot Position: %f, %f", i, robotOdometryMsg.pose.pose.position.x,
+                 robotOdometryMsg.pose.pose.position.y);
+            ROS_INFO("marker: %d, robot Heading: linear:%f, angular:%f", i, robotOdometryMsg.twist.twist.linear.x,
+                 robotOdometryMsg.twist.twist.angular.z);    
+        }   
+        pos_x_array[k] = robotOdometryMsg.pose.pose.position.x * 100;
+        pos_y_array[k] = robotOdometryMsg.pose.pose.position.y * 100;
+        vel_x_array[k] = robotOdometryMsg.twist.twist.linear.x * 100;
+        cout << "%d" << k << " vel: " << vel_x_array[i] << endl;
+        vel_y_array[k] = convertDegree(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  // vel_y -> yaw(0-360)    
+        
 }
 
 void* sub_spin(void* args) 
@@ -65,27 +61,11 @@ void* sub_spin(void* args)
         string topic = ss.str();
         ros::Subscriber odom_sub_ = nh.subscribe<nav_msgs::Odometry>(topic, 
                 1, boost::bind(&robotOdomCallback, _1, i));
+
         odom_sub_set_.push_back(odom_sub_);
     }
     ros::spin();
     return 0;
-}
-
-string GetSysTime(void)
-{
-    string results;
-    time_t t;
-    struct tm* lt;
-    int hh, mm, ss;
-    time(&t);
-    lt = localtime(&t);
-    hh = lt->tm_hour;
-    mm = lt->tm_min;
-    ss = lt->tm_sec;
-    
-    results = to_string(hh) + ':' + to_string(mm) + ':' + to_string(ss);
-
-    return results;
 }
 
 int main(int argc, char** argv) 
@@ -94,7 +74,7 @@ int main(int argc, char** argv)
     float *tar_pos_y_array = new float[boid_num];
     float *tar_vel_x_array = new float[boid_num];
     float *tar_vel_y_array = new float[boid_num];
-    float border_x=220.0, border_y=150.0, coeff_vel=3.5;
+    float border_x=220.0, border_y=150.0, coeff_vel=7.0;
 
 
     /*
@@ -154,37 +134,17 @@ int main(int argc, char** argv)
     // loop
     int index=0;
     bool abandon_flag = false;
-    int num = 0;
-    float sep_dist = 20.0; // avoid collision
-    float coh_dist = 40.0; // combine with other cars
-    float avoid_obs_dist = 10.0;
-    float avoid_border_dist = 10.0;
-    // char sys_time[65];
-    // FILE *fp;
-    // string str_sys_time;
-
-    // if(access("RobotData.txt", F_OK)!=-1)
-    //     remove("RobotData.txt");
-
-    
-
     while(n.ok())
-    {   
+    {
         printf("boid_num:%d\n",boid_num);
         srand(time(NULL));
         float current_angle, vel_x, vel_y;
         printf("========================step:%d==============\n", index);
-        cout << "error times: " << num << "----------------------------------" << endl;
-
-
-
         for(int k=0; k<boid_num; k++)
         {            
-            cout << "while " << vel_x_array[k] << endl;
             if(vel_x_array[k] < 0)
             {
                 abandon_flag = true;
-                num ++ ;
                 break;
             }
             if(pos_x_array[k]>200.0)
@@ -229,56 +189,32 @@ int main(int argc, char** argv)
             abandon_flag = false;
             rate.sleep();
             continue;
-        }        
+        }
+        for(int k=0; k<boid_num; k++)
+        {            
+            if(vel_x_array[k] < 0)
+            {
+                cout << k << " vel_x: " << vel_x_array[k] << endl;
+               return 0;
+            }
+        }
+        if (!modi_flag)
+        {
             // getFlockVelCmd(boid_num, pos_x_array, pos_y_array, 
          //                tar_pos_x_array, tar_pos_y_array, tar_vel_x_array, tar_vel_y_array,
          //                ob_num, ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array,
          //                out_cmd_vel, out_theta_cmd);
-            getFlockVelCmdBorder(boid_num, border_x, border_y, coeff_vel, 
-                sep_dist, coh_dist,
-                avoid_obs_dist, avoid_border_dist,
+            getFlockVelCmdBorder(boid_num, &border_x, &border_y, coeff_vel, 
                 pos_x_array, pos_y_array, 
                 tar_pos_x_array, tar_pos_y_array, tar_vel_x_array, tar_vel_y_array,
                 ob_num, ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array,
                 out_cmd_vel, out_theta_cmd);
-        
-        // if(index==0)
-        //     fp = fopen("RobotData.txt", "w");
-        // else
-        //     fp = fopen("RobotData.txt", "a+");
-
-        // if(fp==0)
-        // {
-        //     printf("file created failure!\n");
-        //     return 0;
-        // }
-        // fseek(fp,0,SEEK_END);
-        // fprintf(fp, "sim_step:%d\n", index);
-        // str_sys_time = GetSysTime();
-        // strcpy(sys_time, str_sys_time.c_str());
-        // fprintf(fp, "sys_time:%s\n", sys_time);
-
-        // for(int l=0; l<boid_num; l++)
-        // {
-        //     if(l==boid_num-1)
-        //         fprintf(fp, "%f %f %f;\n", pos_x_array[l], pos_y_array[l], vel_x_array[l], vel_y_array[l],
-        //          out_cmd_vel[l], out_theta_cmd[l]);
-        //     else
-        //         fprintf(fp, "%f %f %f;", pos_x_array[l], pos_y_array[l], vel_x_array[l], vel_y_array[l],
-        //          out_cmd_vel[l], out_theta_cmd[l]);
-        // }
-
-        // fclose(fp);      
-
             // convert out_cmd_vel, out_theta_cmd to /cmd_vel
             // for(int i = 0, auto vel_pub = vel_pub_set_.begin(); 
         //           vel_pub != vel_pub_set_.end();)
         //return 0;
-        for(int l=0; l<boid_num; l++)
-        {
-            out_cmd_vel[l]=30.0;
-            out_theta_cmd[l]=90.0;
-        }  
+            modi_flag = true;
+        }            
         index++;
         int i = 0;
         for(auto vel_pub = vel_pub_set_.begin(); 

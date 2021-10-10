@@ -1,5 +1,5 @@
 <launch>
   <node pkg="global_vision_position" type="control_sub" respawn="false" name="control_sub" output="screen">
-  	<rosparam file="$(find global_vision_position)/param/configure2.yaml" command="load"/>
+  	<rosparam file="$(find global_vision_position)/param/configure.yaml" command="load"/>
   </node> 
 </launch>
