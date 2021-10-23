@@ -121,6 +121,7 @@ void vel_command_callback(const geometry_msgs::TwistConstPtr& msg, int marker)
 {
     float linear_x = static_cast<float>(msg->linear.x);
     float theta = static_cast<float>(msg->angular.z);
+
     for (auto iter = car_set.begin(); iter != car_set.end();)
     {
         if ((*iter).get_marker() == marker)
@@ -250,8 +251,8 @@ int main(int argc, char** argv)
             float speed =  (*iter).get_speed();
             // ***************** rebound ************
             Point2f medianPoint = (*iter).get_median_point();
-            if (medianPoint.x > 2.0 | medianPoint.y > 1.50 | medianPoint.x < 0.2 |
-                        medianPoint.y < 0.1)
+            if (medianPoint.x > 2.0 | medianPoint.y > 1.50 | medianPoint.x < 0.2 |medianPoint.y < 0.1)
+                        
             {
                 //cout << (*iter).get_init_slope_flag() << endl;
                 if ((*iter).get_init_slope_flag())
@@ -264,6 +265,7 @@ int main(int argc, char** argv)
                 (*iter).set_init_slope_flag(true);
             if (marker == 2){
                 float Tar_slope = (*iter).get_target_slope();
+                cout << (*iter).get_target_speed() << endl;
                 float Now_slope = (*iter).get_slope();
                 cout << "marker" << endl;
                 cout << "Tar slope:";

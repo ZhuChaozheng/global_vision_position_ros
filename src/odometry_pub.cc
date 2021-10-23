@@ -186,7 +186,7 @@ int main(int argc, char** argv)
             car_location.lookupTransform("hik_camera","tag_7",ros::Time(0),tag_7);
             car_location.lookupTransform("hik_camera","tag_8",ros::Time(0),tag_8);*/
          //   car_location.lookupTransform("hik_camera","tag_9",ros::Time(0),tag_9);         
-     
+            
             for (auto iter = car_set.begin(); iter != car_set.end();)
             {
                 
@@ -311,10 +311,13 @@ int main(int argc, char** argv)
                 //     float filter_slope = medium_filter(slope, (*iter).get_cache_slope_array(), 10);
                 //     cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << filter_slope << endl;
                 // }
+                // update the states
+                (*iter).set_slope(slope);
+                (*iter).set_median_point(medianPoint);
                 Car lastCar;
-                float speed = 0;
+                float speed = (*iter).get_speed();
                 float angular = 0;
-                if (Exist((*iter), carStateSet, lastCar))
+                if (Exist((*iter), carStateSet, lastCar) & (j == 3))
                 {
                     // cout << "j: " << j << endl;
                     
@@ -323,29 +326,35 @@ int main(int argc, char** argv)
                     float lastSlope = lastCar.get_slope();
     		        speed = sqrt(pow(medianPoint.x - 
                             lastMedianPoint.x, 2) + pow(medianPoint.y - 
-                            lastMedianPoint.y, 2)) / consumeTime; 
-                    angular = (slope - lastSlope) / consumeTime;
+                            lastMedianPoint.y, 2)) / (consumeTime * 2); 
+                    angular = (slope - lastSlope) / (consumeTime * 2);
+                    // speed = sqrt(pow(medianPoint.x - 
+                    //         lastMedianPoint.x, 2) + pow(medianPoint.y - 
+                    //         lastMedianPoint.y, 2)) / consumeTime; 
+                    // angular = (slope - lastSlope) / consumeTime;
                     bool initial_flag = (*iter).get_init_slope_flag();                   
                     
-                    (*iter).set_slope(slope);
-                    (*iter).set_median_point(medianPoint);
+
                     // cout << "marker: " << marker << endl;
                     //cout << "slope: " << slope << endl; 
+                    // if (marker == 2)
+                        // cout << "last " << lastMedianPoint.x << " " << lastMedianPoint.y << " " << " " << speed << endl;
+                
                     (*iter).set_speed(speed);
                         // cout << medianPoint.x << " " << medianPoint.y << " " << slope << endl;
                     DeleteCar(lastCar, carStateSet);
                 }
-                //cout << "carStateSet: " << carStateSet.size() << endl;
-                carStateSet.push_back((*iter));
+                // cout << "carStateSet: " << carStateSet.size() << endl;
+                if (j == 1  ) // mean the speed and angular
+                    carStateSet.push_back((*iter));
+
                 
                 // if the slope is 0, then the car may stay offline
-        	    if (slope != 0)
+        	    if (slope != 1)
                     car_alive_set.push_back(*iter);
-                if (marker == 0)
+                if (marker == 2)
                     cout << medianPoint.x << " " << medianPoint.y << " " << slope << " " << " " << speed << endl;
-                if (speed < 0)
-                    return 0;
-                    
+                                    
                 nav_msgs::Odometry odom;
                 odom.header.stamp = currentTime;
                 odom.header.frame_id = "odom";
@@ -381,9 +390,9 @@ int main(int argc, char** argv)
                 }
                 iter ++;
             }
-            if (j == 5)
+            if (j == 3)
                 j = 0;
-            j ++; 
+            j ++;
         	currentTime = ros::Time::now();
         	consumeTime = currentTime.toSec() - lastTime.toSec();
         	// cout << "odometry fps: " << 1/consumeTime << "Hz" << endl;
