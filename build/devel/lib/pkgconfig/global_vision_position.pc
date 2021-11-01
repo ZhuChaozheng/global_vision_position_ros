@@ -1,0 +1,8 @@
+prefix=/home/jason/Downloads/global_vision_position_ros/build/devel
+
+Name: global_vision_position
+Description: Description of global_vision_position
+Version: 1.0.0
+Cflags: 
+Libs: -L/home/jason/Downloads/global_vision_position_ros/build/devel/lib 
+Requires: geometry_msgs roscpp nav_msgs std_msgs

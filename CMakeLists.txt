@@ -19,6 +19,7 @@ include_directories( "/usr/include/eigen3" )
 include_directories("/opt/MVS/include")
 link_directories("/opt/MVS/lib/64")
 link_directories("/usr/lib")
+link_libraries(pthread)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -162,4 +163,3 @@ set(THIRD_PARTY_LIBS
 ################## dependencies ################
 include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src)
-add_subdirectory(test)

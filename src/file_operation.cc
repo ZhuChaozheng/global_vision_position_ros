@@ -17,12 +17,10 @@ void ConfigParamtersRead(vector<Car> &car_set)
     cout << "cache_area right_down: " << right_down << endl;
     string front_str;
     int marker_;
-    float slope_p_, slope_i_, slope_d_,
-            speed_p_, speed_i_, speed_d_;
     string ip_;
     int port_;
-    float target_slope_; 
-    float target_speed_; 
+    float target_angle_; 
+    float target_velocity_; 
     float target_point_x_, target_point_y_;
     bool flag = false; // match existing car
     // clear old car set
@@ -33,36 +31,6 @@ void ConfigParamtersRead(vector<Car> &car_set)
         string combined_str = front_str + to_string(i);
         // fs[combined_str] >> marker_;
         private_nh.getParam(combined_str, marker_);
-        
-        front_str = "slope_p_";
-        combined_str = front_str + to_string(i);
-        // fs[combined_str] >> slope_p_;
-        private_nh.getParam(combined_str, slope_p_);
-
-        front_str = "slope_i_";
-        combined_str = front_str + to_string(i);
-        // fs[combined_str] >> slope_i_;
-        private_nh.getParam(combined_str, slope_i_);
-
-        front_str = "slope_d_";
-        combined_str = front_str + to_string(i);
-        // fs[combined_str] >> slope_d_;
-        private_nh.getParam(combined_str, slope_d_);
-
-        front_str = "speed_p_";
-        combined_str = front_str + to_string(i);
-        // fs[combined_str] >> speed_p_;
-        private_nh.getParam(combined_str, speed_p_);
-
-        front_str = "speed_i_";
-        combined_str = front_str + to_string(i);
-        // fs[combined_str] >> speed_i_;
-        private_nh.getParam(combined_str, speed_i_);
-
-        front_str = "speed_d_";
-        combined_str = front_str + to_string(i);
-        // fs[combined_str] >> speed_d_;
-        private_nh.getParam(combined_str, speed_d_);
 
         front_str = "ip_";
         combined_str = front_str + to_string(i);
@@ -74,15 +42,15 @@ void ConfigParamtersRead(vector<Car> &car_set)
         // fs[combined_str] >> port_;
         private_nh.getParam(combined_str, port_);
 
-        front_str = "target_slope_";
+        front_str = "target_angle_";
         combined_str = front_str + to_string(i);
-        // fs[combined_str] >> target_slope_;
-        private_nh.getParam(combined_str, target_slope_);
+        // fs[combined_str] >> target_angle_;
+        private_nh.getParam(combined_str, target_angle_);
 
-        front_str = "target_speed_";
+        front_str = "target_velocity_";
         combined_str = front_str + to_string(i);
-        // fs[combined_str] >> target_speed_;
-        private_nh.getParam(combined_str, target_speed_);
+        // fs[combined_str] >> target_velocity_;
+        private_nh.getParam(combined_str, target_velocity_);
 
         front_str = "target_point_x_";
         combined_str = front_str + to_string(i);
@@ -94,19 +62,17 @@ void ConfigParamtersRead(vector<Car> &car_set)
         // fs[combined_str] >> target_point_y_;
         private_nh.getParam(combined_str, target_point_y_);
 
-        // cout << "read target_speed_: " << target_speed_ << endl;
+        // cout << "read target_velocity_: " << target_velocity_ << endl;
         for (auto iter = car_set.begin(); 
                 iter != car_set.end();)
         {
             int marker = (*iter).get_marker();
             if (marker == i)
             {
-                (*iter).update_parameters(slope_p_, slope_i_, 
-                        slope_d_, speed_p_, speed_i_, 
-                        speed_d_, ip_, target_slope_, 
-                        target_speed_, target_point_x_, 
+                (*iter).update_parameters(ip_, target_angle_, 
+                        target_velocity_, target_point_x_, 
                         target_point_y_);
-                cout << "update target_slope: " << target_slope_ << endl;
+                cout << "update target_angle: " << target_angle_ << endl;
                 flag = true;
                 break;
             }
@@ -114,11 +80,10 @@ void ConfigParamtersRead(vector<Car> &car_set)
         }
         if (!flag)
         {
-            Car *car = new Car(marker_, slope_p_, slope_i_, 
-                slope_d_, speed_p_, speed_i_, speed_d_, ip_, 
-                port_, target_slope_, target_speed_, 
+            Car *car = new Car(marker_, ip_, 
+                port_, target_angle_, target_velocity_, 
                 target_point_x_, target_point_y_);
-	    cout << marker_ << " update target_speed: " << target_speed_ << endl;
+	    cout << marker_ << " update target_velocity: " << target_velocity_ << endl;
             car_set.push_back(*car);
         }
     }
