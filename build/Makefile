@@ -1078,30 +1078,17 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
-# Target rules for targets named control_sub
+# Target rules for targets named GlobalVisionLibrary
 
 # Build rule for target.
-control_sub: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 control_sub
-.PHONY : control_sub
+GlobalVisionLibrary: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 GlobalVisionLibrary
+.PHONY : GlobalVisionLibrary
 
 # fast build rule for target.
-control_sub/fast:
-	$(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/build
-.PHONY : control_sub/fast
-
-#=============================================================================
-# Target rules for targets named tcp_driver_node
-
-# Build rule for target.
-tcp_driver_node: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tcp_driver_node
-.PHONY : tcp_driver_node
-
-# fast build rule for target.
-tcp_driver_node/fast:
-	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/build
-.PHONY : tcp_driver_node/fast
+GlobalVisionLibrary/fast:
+	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/build
+.PHONY : GlobalVisionLibrary/fast
 
 #=============================================================================
 # Target rules for targets named odometry_pub
@@ -1117,17 +1104,17 @@ odometry_pub/fast:
 .PHONY : odometry_pub/fast
 
 #=============================================================================
-# Target rules for targets named GlobalVisionLibrary
+# Target rules for targets named tcp_driver_node
 
 # Build rule for target.
-GlobalVisionLibrary: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 GlobalVisionLibrary
-.PHONY : GlobalVisionLibrary
+tcp_driver_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tcp_driver_node
+.PHONY : tcp_driver_node
 
 # fast build rule for target.
-GlobalVisionLibrary/fast:
-	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/build
-.PHONY : GlobalVisionLibrary/fast
+tcp_driver_node/fast:
+	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/build
+.PHONY : tcp_driver_node/fast
 
 # Help Target
 help:
@@ -1212,10 +1199,9 @@ help:
 	@echo "... gmock"
 	@echo "... gtest"
 	@echo "... gtest_main"
-	@echo "... control_sub"
-	@echo "... tcp_driver_node"
-	@echo "... odometry_pub"
 	@echo "... GlobalVisionLibrary"
+	@echo "... odometry_pub"
+	@echo "... tcp_driver_node"
 .PHONY : help
 
 

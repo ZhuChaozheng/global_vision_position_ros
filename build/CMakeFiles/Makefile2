@@ -524,7 +524,7 @@ CMakeFiles/global_vision_position_generate_messages_eus.dir/all: CMakeFiles/std_
 CMakeFiles/global_vision_position_generate_messages_eus.dir/all: CMakeFiles/geometry_msgs_generate_messages_eus.dir/all
 	$(MAKE) -f CMakeFiles/global_vision_position_generate_messages_eus.dir/build.make CMakeFiles/global_vision_position_generate_messages_eus.dir/depend
 	$(MAKE) -f CMakeFiles/global_vision_position_generate_messages_eus.dir/build.make CMakeFiles/global_vision_position_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=7 "Built target global_vision_position_generate_messages_eus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=5 "Built target global_vision_position_generate_messages_eus"
 .PHONY : CMakeFiles/global_vision_position_generate_messages_eus.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2217,7 +2217,7 @@ gtest/preinstall: gtest/gtest/preinstall
 gtest/CMakeFiles/gmock_main.dir/all:
 	$(MAKE) -f gtest/CMakeFiles/gmock_main.dir/build.make gtest/CMakeFiles/gmock_main.dir/depend
 	$(MAKE) -f gtest/CMakeFiles/gmock_main.dir/build.make gtest/CMakeFiles/gmock_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=11,12,13,14 "Built target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=9,10,11,12 "Built target gmock_main"
 .PHONY : gtest/CMakeFiles/gmock_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2249,7 +2249,7 @@ clean: gtest/CMakeFiles/gmock_main.dir/clean
 gtest/CMakeFiles/gmock.dir/all:
 	$(MAKE) -f gtest/CMakeFiles/gmock.dir/build.make gtest/CMakeFiles/gmock.dir/depend
 	$(MAKE) -f gtest/CMakeFiles/gmock.dir/build.make gtest/CMakeFiles/gmock.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=8,9,10 "Built target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=6,7,8 "Built target gmock"
 .PHONY : gtest/CMakeFiles/gmock.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2300,7 +2300,7 @@ gtest/gtest/preinstall:
 gtest/gtest/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f gtest/gtest/CMakeFiles/gtest.dir/build.make gtest/gtest/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f gtest/gtest/CMakeFiles/gtest.dir/build.make gtest/gtest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=15,16 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=13,14 "Built target gtest"
 .PHONY : gtest/gtest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2332,7 +2332,7 @@ clean: gtest/gtest/CMakeFiles/gtest.dir/clean
 gtest/gtest/CMakeFiles/gtest_main.dir/all: gtest/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/gtest/CMakeFiles/gtest_main.dir/build.make gtest/gtest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f gtest/gtest/CMakeFiles/gtest_main.dir/build.make gtest/gtest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=17,18 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=15,16 "Built target gtest_main"
 .PHONY : gtest/gtest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -2361,18 +2361,16 @@ clean: gtest/gtest/CMakeFiles/gtest_main.dir/clean
 # Directory level rules for directory src
 
 # Convenience name for "all" pass in the directory.
-src/all: src/CMakeFiles/control_sub.dir/all
-src/all: src/CMakeFiles/tcp_driver_node.dir/all
-src/all: src/CMakeFiles/odometry_pub.dir/all
 src/all: src/CMakeFiles/GlobalVisionLibrary.dir/all
+src/all: src/CMakeFiles/odometry_pub.dir/all
+src/all: src/CMakeFiles/tcp_driver_node.dir/all
 
 .PHONY : src/all
 
 # Convenience name for "clean" pass in the directory.
-src/clean: src/CMakeFiles/control_sub.dir/clean
-src/clean: src/CMakeFiles/tcp_driver_node.dir/clean
-src/clean: src/CMakeFiles/odometry_pub.dir/clean
 src/clean: src/CMakeFiles/GlobalVisionLibrary.dir/clean
+src/clean: src/CMakeFiles/odometry_pub.dir/clean
+src/clean: src/CMakeFiles/tcp_driver_node.dir/clean
 
 .PHONY : src/clean
 
@@ -2382,186 +2380,39 @@ src/preinstall:
 .PHONY : src/preinstall
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/control_sub.dir
+# Target rules for target src/CMakeFiles/GlobalVisionLibrary.dir
 
 # All Build rule for target.
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/global_vision_position_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/global_vision_position_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/global_vision_position_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/nav_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/nav_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/nav_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/nav_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/global_vision_position_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf2_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/global_vision_position_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf2_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/roscpp_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/roscpp_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/std_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/roscpp_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf2_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/geometry_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/nav_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/std_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/geometry_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/roscpp_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/geometry_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/geometry_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/roscpp_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/sensor_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/sensor_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/tf2_msgs_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/sensor_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_generate_messages_nodejs.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_generate_messages_py.dir/all
-src/CMakeFiles/control_sub.dir/all: CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/control_sub.dir/all: src/CMakeFiles/GlobalVisionLibrary.dir/all
-	$(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/depend
-	$(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=5,6 "Built target control_sub"
-.PHONY : src/CMakeFiles/control_sub.dir/all
+src/CMakeFiles/GlobalVisionLibrary.dir/all:
+	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/depend
+	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=1,2,3,4 "Built target GlobalVisionLibrary"
+.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/all
 
 # Include target in all.
-all: src/CMakeFiles/control_sub.dir/all
+all: src/CMakeFiles/GlobalVisionLibrary.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/control_sub.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 7
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/control_sub.dir/all
+src/CMakeFiles/GlobalVisionLibrary.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/GlobalVisionLibrary.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/control_sub.dir/rule
+.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/rule
 
 # Convenience name for target.
-control_sub: src/CMakeFiles/control_sub.dir/rule
+GlobalVisionLibrary: src/CMakeFiles/GlobalVisionLibrary.dir/rule
 
-.PHONY : control_sub
-
-# clean rule for target.
-src/CMakeFiles/control_sub.dir/clean:
-	$(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/clean
-.PHONY : src/CMakeFiles/control_sub.dir/clean
+.PHONY : GlobalVisionLibrary
 
 # clean rule for target.
-clean: src/CMakeFiles/control_sub.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target src/CMakeFiles/tcp_driver_node.dir
-
-# All Build rule for target.
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_eus.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_nodejs.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_py.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/all
-src/CMakeFiles/tcp_driver_node.dir/all: src/CMakeFiles/GlobalVisionLibrary.dir/all
-	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/depend
-	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=21,22 "Built target tcp_driver_node"
-.PHONY : src/CMakeFiles/tcp_driver_node.dir/all
-
-# Include target in all.
-all: src/CMakeFiles/tcp_driver_node.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-src/CMakeFiles/tcp_driver_node.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 7
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/tcp_driver_node.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/tcp_driver_node.dir/rule
-
-# Convenience name for target.
-tcp_driver_node: src/CMakeFiles/tcp_driver_node.dir/rule
-
-.PHONY : tcp_driver_node
+src/CMakeFiles/GlobalVisionLibrary.dir/clean:
+	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/clean
+.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/clean
 
 # clean rule for target.
-src/CMakeFiles/tcp_driver_node.dir/clean:
-	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/clean
-.PHONY : src/CMakeFiles/tcp_driver_node.dir/clean
-
-# clean rule for target.
-clean: src/CMakeFiles/tcp_driver_node.dir/clean
+clean: src/CMakeFiles/GlobalVisionLibrary.dir/clean
 
 .PHONY : clean
 
@@ -2627,7 +2478,7 @@ src/CMakeFiles/odometry_pub.dir/all: CMakeFiles/actionlib_msgs_generate_messages
 src/CMakeFiles/odometry_pub.dir/all: src/CMakeFiles/GlobalVisionLibrary.dir/all
 	$(MAKE) -f src/CMakeFiles/odometry_pub.dir/build.make src/CMakeFiles/odometry_pub.dir/depend
 	$(MAKE) -f src/CMakeFiles/odometry_pub.dir/build.make src/CMakeFiles/odometry_pub.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=19,20 "Built target odometry_pub"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=17,18 "Built target odometry_pub"
 .PHONY : src/CMakeFiles/odometry_pub.dir/all
 
 # Include target in all.
@@ -2658,39 +2509,94 @@ clean: src/CMakeFiles/odometry_pub.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/GlobalVisionLibrary.dir
+# Target rules for target src/CMakeFiles/tcp_driver_node.dir
 
 # All Build rule for target.
-src/CMakeFiles/GlobalVisionLibrary.dir/all:
-	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/depend
-	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=1,2,3,4 "Built target GlobalVisionLibrary"
-.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/global_vision_position_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/nav_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/geometry_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/roscpp_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/tf2_msgs_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/std_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_cpp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/sensor_msgs_generate_messages_eus.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_nodejs.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_generate_messages_py.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: CMakeFiles/actionlib_msgs_generate_messages_lisp.dir/all
+src/CMakeFiles/tcp_driver_node.dir/all: src/CMakeFiles/GlobalVisionLibrary.dir/all
+	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/depend
+	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jason/Downloads/global_vision_position_ros/build/CMakeFiles --progress-num=19,20 "Built target tcp_driver_node"
+.PHONY : src/CMakeFiles/tcp_driver_node.dir/all
 
 # Include target in all.
-all: src/CMakeFiles/GlobalVisionLibrary.dir/all
+all: src/CMakeFiles/tcp_driver_node.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/GlobalVisionLibrary.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/GlobalVisionLibrary.dir/all
+src/CMakeFiles/tcp_driver_node.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 7
+	$(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/tcp_driver_node.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jason/Downloads/global_vision_position_ros/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/rule
+.PHONY : src/CMakeFiles/tcp_driver_node.dir/rule
 
 # Convenience name for target.
-GlobalVisionLibrary: src/CMakeFiles/GlobalVisionLibrary.dir/rule
+tcp_driver_node: src/CMakeFiles/tcp_driver_node.dir/rule
 
-.PHONY : GlobalVisionLibrary
-
-# clean rule for target.
-src/CMakeFiles/GlobalVisionLibrary.dir/clean:
-	$(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/clean
-.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/clean
+.PHONY : tcp_driver_node
 
 # clean rule for target.
-clean: src/CMakeFiles/GlobalVisionLibrary.dir/clean
+src/CMakeFiles/tcp_driver_node.dir/clean:
+	$(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/clean
+.PHONY : src/CMakeFiles/tcp_driver_node.dir/clean
+
+# clean rule for target.
+clean: src/CMakeFiles/tcp_driver_node.dir/clean
 
 .PHONY : clean
 

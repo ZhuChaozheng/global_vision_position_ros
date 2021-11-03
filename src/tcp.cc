@@ -32,41 +32,39 @@ void update_status(int connfd, unsigned char buff[], int size)
             / 1000;
 }
 
-void *write_test(void *arg)
-{
-    free(arg);
-    int marker = 3;
-    unsigned char buff[6]; // unsigned char is equal to hex
-    buff[0] = 125; // 7D
-    buff[1] = 122; // 7A
-    buff[2] = marker;
-    buff[3] = 0;
-    buff[4] = 0;
-    buff[5] = 123; // 7B
-    while(1)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            sleep(1);
-            int connfd = car_[i].connfd;
-            printf("connfd: %d\n", connfd);
-            if (connfd == 0)
-                continue;
-            write(connfd, buff, sizeof(buff));
-            printf("accomplish reply!\n");
-        }
-    }
+// void *write_test(void *arg)
+// {
+//     free(arg);
+//     int marker = 3;
+//     unsigned char buff[6]; // unsigned char is equal to hex
+//     buff[0] = 125; // 7D
+//     buff[1] = 122; // 7A
+//     buff[2] = marker;
+//     buff[3] = 0;
+//     buff[4] = 0;
+//     buff[5] = 123; // 7B
+//     while(1)
+//     {
+//         for (int i = 0; i < 10; i++)
+//         {
+//             sleep(1);
+//             int connfd = car_[i].connfd;
+//             printf("connfd: %d\n", connfd);
+//             if (connfd == 0)
+//                 continue;
+//             write(connfd, buff, sizeof(buff));
+//             printf("accomplish reply!\n");
+//         }
+//     }
     
-}
+// }
 
-void write_func(int marker, unsigned char buff[], car car_array[])
+void write_func(int marker, unsigned char buff[], int size)
 {
-    int connfd = car_array[marker].connfd;
-    printf("%d\n", connfd);
+    int connfd = car_[marker].connfd;
     if (connfd == 0)
         return;
-    write(connfd, buff, sizeof(buff));
-    printf("accomplish reply!\n");
+    write(connfd, buff, size);
 }
 
 void *usethread(void *arg)
@@ -115,8 +113,8 @@ int create_server_and_update_data()
     }
     else
         printf("Server listening..\n");
-    pthread_t write_pid;
-    pthread_create(&write_pid, NULL, write_test, NULL); 
+    // pthread_t write_pid;
+    // pthread_create(&write_pid, NULL, write_test, NULL); 
     pthread_t pid;
     while(1)
     {

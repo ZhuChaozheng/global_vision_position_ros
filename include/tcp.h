@@ -27,7 +27,7 @@ void read_func(int sockfd);
 
 void update_status(int sockfd, unsigned char buff[], int size);
 
-void write_func(int marker, unsigned char buff[], car car_array[]);
+void write_func(int marker, unsigned char buff[], int size);
 
 void *usethread(void *arg);
 

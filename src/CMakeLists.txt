@@ -21,8 +21,8 @@ add_dependencies(tcp_driver_node ${${PROJECT_NAME}_EXPORTED_TARGETS}
 	${catkin_EXPORTED_TARGETS})
 target_link_libraries(tcp_driver_node GlobalVisionLibrary)
 
-add_executable(control_sub control_sub.cc)
-add_dependencies(control_sub ${${PROJECT_NAME}_EXPORTED_TARGETS}
-	${catkin_EXPORTED_TARGETS})
-target_link_libraries(control_sub GlobalVisionLibrary)
+#add_executable(control_sub control_sub.cc)
+#add_dependencies(control_sub ${${PROJECT_NAME}_EXPORTED_TARGETS}
+#	${catkin_EXPORTED_TARGETS})
+#target_link_libraries(control_sub GlobalVisionLibrary)
 

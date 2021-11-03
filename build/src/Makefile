@@ -56,39 +56,6 @@ CMAKE_BINARY_DIR = /home/jason/Downloads/global_vision_position_ros/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/local/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -101,15 +68,17 @@ install/strip/fast: preinstall/fast
 	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
 
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # Special rule for the target install
 install: preinstall
@@ -123,17 +92,48 @@ install/fast: preinstall/fast
 	/usr/local/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
 
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/local/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/local/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/local/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,34 +168,19 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/control_sub.dir/rule:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/control_sub.dir/rule
-.PHONY : src/CMakeFiles/control_sub.dir/rule
+src/CMakeFiles/GlobalVisionLibrary.dir/rule:
+	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/GlobalVisionLibrary.dir/rule
+.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/rule
 
 # Convenience name for target.
-control_sub: src/CMakeFiles/control_sub.dir/rule
+GlobalVisionLibrary: src/CMakeFiles/GlobalVisionLibrary.dir/rule
 
-.PHONY : control_sub
+.PHONY : GlobalVisionLibrary
 
 # fast build rule for target.
-control_sub/fast:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/build
-.PHONY : control_sub/fast
-
-# Convenience name for target.
-src/CMakeFiles/tcp_driver_node.dir/rule:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/tcp_driver_node.dir/rule
-.PHONY : src/CMakeFiles/tcp_driver_node.dir/rule
-
-# Convenience name for target.
-tcp_driver_node: src/CMakeFiles/tcp_driver_node.dir/rule
-
-.PHONY : tcp_driver_node
-
-# fast build rule for target.
-tcp_driver_node/fast:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/build
-.PHONY : tcp_driver_node/fast
+GlobalVisionLibrary/fast:
+	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/build
+.PHONY : GlobalVisionLibrary/fast
 
 # Convenience name for target.
 src/CMakeFiles/odometry_pub.dir/rule:
@@ -213,19 +198,19 @@ odometry_pub/fast:
 .PHONY : odometry_pub/fast
 
 # Convenience name for target.
-src/CMakeFiles/GlobalVisionLibrary.dir/rule:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/GlobalVisionLibrary.dir/rule
-.PHONY : src/CMakeFiles/GlobalVisionLibrary.dir/rule
+src/CMakeFiles/tcp_driver_node.dir/rule:
+	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/tcp_driver_node.dir/rule
+.PHONY : src/CMakeFiles/tcp_driver_node.dir/rule
 
 # Convenience name for target.
-GlobalVisionLibrary: src/CMakeFiles/GlobalVisionLibrary.dir/rule
+tcp_driver_node: src/CMakeFiles/tcp_driver_node.dir/rule
 
-.PHONY : GlobalVisionLibrary
+.PHONY : tcp_driver_node
 
 # fast build rule for target.
-GlobalVisionLibrary/fast:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/build
-.PHONY : GlobalVisionLibrary/fast
+tcp_driver_node/fast:
+	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/tcp_driver_node.dir/build.make src/CMakeFiles/tcp_driver_node.dir/build
+.PHONY : tcp_driver_node/fast
 
 car.o: car.cc.o
 
@@ -253,33 +238,6 @@ car.s: car.cc.s
 car.cc.s:
 	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/GlobalVisionLibrary.dir/build.make src/CMakeFiles/GlobalVisionLibrary.dir/car.cc.s
 .PHONY : car.cc.s
-
-control_sub.o: control_sub.cc.o
-
-.PHONY : control_sub.o
-
-# target to build an object file
-control_sub.cc.o:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/control_sub.cc.o
-.PHONY : control_sub.cc.o
-
-control_sub.i: control_sub.cc.i
-
-.PHONY : control_sub.i
-
-# target to preprocess a source file
-control_sub.cc.i:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/control_sub.cc.i
-.PHONY : control_sub.cc.i
-
-control_sub.s: control_sub.cc.s
-
-.PHONY : control_sub.s
-
-# target to generate assembly for a file
-control_sub.cc.s:
-	cd /home/jason/Downloads/global_vision_position_ros/build && $(MAKE) -f src/CMakeFiles/control_sub.dir/build.make src/CMakeFiles/control_sub.dir/control_sub.cc.s
-.PHONY : control_sub.cc.s
 
 file_operation.o: file_operation.cc.o
 
@@ -395,23 +353,19 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... control_sub"
-	@echo "... test"
-	@echo "... tcp_driver_node"
-	@echo "... edit_cache"
-	@echo "... odometry_pub"
-	@echo "... GlobalVisionLibrary"
-	@echo "... rebuild_cache"
 	@echo "... install/strip"
-	@echo "... list_install_components"
-	@echo "... install"
 	@echo "... install/local"
+	@echo "... install"
+	@echo "... list_install_components"
+	@echo "... rebuild_cache"
+	@echo "... GlobalVisionLibrary"
+	@echo "... odometry_pub"
+	@echo "... edit_cache"
+	@echo "... tcp_driver_node"
+	@echo "... test"
 	@echo "... car.o"
 	@echo "... car.i"
 	@echo "... car.s"
-	@echo "... control_sub.o"
-	@echo "... control_sub.i"
-	@echo "... control_sub.s"
 	@echo "... file_operation.o"
 	@echo "... file_operation.i"
 	@echo "... file_operation.s"
