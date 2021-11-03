@@ -25,9 +25,10 @@
 using namespace cv;
 using namespace std;
 
-char sockfd_array[10];
+extern car car_[10];
+int sockfd_array[10];
 
-void combine_buff(char buff[], int size, float linear_velocity, 
+void combine_buff(unsigned char buff[], int size, float linear_velocity, 
         float angular_velocity);
 /**
  * receive /status topic and save sockfd
@@ -50,36 +51,54 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
       pch_f = atof(pch);
       float_array[i] = pch_f;
       pch = strtok (NULL, " ");
+      i ++;
     }
     int j = 0;
     for (int k = 0; k < 10; k++)
     {
-        sockfd_array[k] = float_array[j]; // only save sockfd
+        sockfd_array[k] = (int)float_array[j]; // only save sockfd
         j = j + 3;
+        // printf("%d\n", sockfd_array[k]);
     }
+
+    /************ test code ****************/
+    int marker = 3;
+    float linear_velocity = 25.01;
+    float angular_velocity = 10.213;
+    unsigned char buff[11];
+    buff[0] = 125; // 7D
+    buff[1] = 122; // 7A
+    buff[2] = marker;
+    buff[5] = 0;
+    buff[6] = 0;
+    buff[10] = 123; // 7B
+    combine_buff(buff, 11, linear_velocity, angular_velocity);
+    printf("connfd: %d", car_[3].connfd);
+    write_func(marker, buff, car_);
+    /************* end test ****************/
 }
 
 /**
  * receive linear_velocity and angular_velocity and packet them to buf,
  * then write the corresponding sockfd.
  */
-void vel_command_callback(const geometry_msgs::TwistConstPtr& msg, int marker)
+void vel_command_callback(const geometry_msgs::TwistConstPtr& msg, 
+        int marker)
 {
     float linear_velocity = static_cast<float>(msg->linear.x);
     float angular_velocity = static_cast<float>(msg->angular.z);
-    int sockfd = sockfd_array[marker];
-    char buff[11];
-    buff[0] = 0x7D;
-    buff[1] = 0x7A;
+    unsigned char buff[11];
+    buff[0] = 125; // 7D
+    buff[1] = 122; // 7A
     buff[2] = marker;
     buff[5] = 0;
     buff[6] = 0;
-    buff[10] = 0x7B;
+    buff[10] = 123; // 7B
     combine_buff(buff, 11, linear_velocity, angular_velocity);
-    write_func(sockfd, buff);
+    write_func(marker, buff, car_);
 }
 
-void combine_buff(char buff[], int size, float linear_velocity, 
+void combine_buff(unsigned char buff[], int size, float linear_velocity, 
         float angular_velocity)
 {
     int buff_linear = int(linear_velocity * 1000);
@@ -88,15 +107,22 @@ void combine_buff(char buff[], int size, float linear_velocity,
     buff[4] = buff_linear;
     buff[7] = buff_angular >> 8;
     buff[8] = buff_angular;
-    //buff[9] = check_num(buff, size);
+    // buff[9] = check_num(buff, 8);
     buff[9] = 0;
 }
 
 // implement the check num algorithm
-void check_num(char buff[], int size)
+unsigned char check_num(unsigned char buff[], int num)
 {
-
+    unsigned char check_sum = 0;
+    //Verify the data received
+    for(int k = 0; k < num; k++)
+    {
+        check_sum = check_sum ^ buff[k];
+    }
+    return check_sum;
 }
+
 
 int main(int argc, char** argv)
 {

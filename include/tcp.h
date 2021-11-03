@@ -16,7 +16,7 @@
 #define PORT 8234
 typedef struct _car
 {
-    int sockfd;
+    int connfd;
     float velocity;
     float angular_velocity;
 }car;
@@ -25,9 +25,9 @@ car car_[10];
 
 void read_func(int sockfd);
 
-void update_status(int sockfd, char buff[], int size);
+void update_status(int sockfd, unsigned char buff[], int size);
 
-void write_func(int sockfd, char buff[]);
+void write_func(int marker, unsigned char buff[], car car_array[]);
 
 void *usethread(void *arg);
 

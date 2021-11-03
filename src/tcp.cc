@@ -1,13 +1,13 @@
 #include "tcp.h"
 
-void read_func(int sockfd)
+void read_func(int connfd)
 {
-    char buff[MAX_SIZE];
+    printf("%d\n", connfd);
+    unsigned char buff[MAX_SIZE];
     while(1) 
     {
         memset(buff, 0, sizeof(buff));
-        int ret = read(sockfd, buff, sizeof(buff));
-        printf("wait for ...");
+        int ret = read(connfd, buff, sizeof(buff));
         if(ret == 0) 
         {  
             printf("client close\n");
@@ -15,36 +15,65 @@ void read_func(int sockfd)
         }
         else if(ret == -1) 
         {
-            exit(0);
+            return;
         }
-        fputs(buff, stdout);
-        update_status(sockfd, buff, ret);
-        // write(conn, recvbuf, ret);
+        update_status(connfd, buff, ret);
     }
 }
 
-void update_status(int sockfd, char buff[], int size)
+void update_status(int connfd, unsigned char buff[], int size)
 {
-    printf("update_status size: %d \t", size);
+    // 7B 7B 01(id) 1B 00 00(5) 00(6) 00 00 00(9) 00(10) FB 98 01 
+    // 31 40 30 FF FA FF FF FF FD 2E DF CF 7D 
     int id = buff[2];
-    car_[id].sockfd = sockfd;
-    car_[id].velocity = float((buff[5] << 8 + buff[6]) / 1000);
-    car_[id].angular_velocity = float((buff[9] << 8 + buff[10]) / 1000);
-    printf("update_status data: %f \t", car_[id].angular_velocity);
+    car_[id].connfd = connfd;
+    car_[id].velocity = (float)((buff[5] << 8) + buff[6]) / 1000;
+    car_[id].angular_velocity = (float) (buff[9] << 8 + buff[10]) 
+            / 1000;
 }
 
-void write_func(int sockfd, char buff[])
+void *write_test(void *arg)
 {
-    write(sockfd, buff, strlen(buff));
+    free(arg);
+    int marker = 3;
+    unsigned char buff[6]; // unsigned char is equal to hex
+    buff[0] = 125; // 7D
+    buff[1] = 122; // 7A
+    buff[2] = marker;
+    buff[3] = 0;
+    buff[4] = 0;
+    buff[5] = 123; // 7B
+    while(1)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            sleep(1);
+            int connfd = car_[i].connfd;
+            printf("connfd: %d\n", connfd);
+            if (connfd == 0)
+                continue;
+            write(connfd, buff, sizeof(buff));
+            printf("accomplish reply!\n");
+        }
+    }
+    
+}
+
+void write_func(int marker, unsigned char buff[], car car_array[])
+{
+    int connfd = car_array[marker].connfd;
+    printf("%d\n", connfd);
+    if (connfd == 0)
+        return;
+    write(connfd, buff, sizeof(buff));
+    printf("accomplish reply!\n");
 }
 
 void *usethread(void *arg)
 {
     int connfd=*(int *)arg;
-    printf("From client usethread A");
-    // pthread_detach(pthread_self());
+    pthread_detach(pthread_self());
     free(arg);
-    printf("From client usethread");
     read_func(connfd);
     close(connfd);
     return NULL;
@@ -85,10 +114,12 @@ int create_server_and_update_data()
         exit(0);
     }
     else
-        printf("Server listening..\n");    
+        printf("Server listening..\n");
+    pthread_t write_pid;
+    pthread_create(&write_pid, NULL, write_test, NULL); 
     pthread_t pid;
-    // while(1)
-    // {
+    while(1)
+    {
         int *connfd=new int();
         // Accept the data packet from client and verification
         len = sizeof(cliaddr);
@@ -101,6 +132,6 @@ int create_server_and_update_data()
         else
             printf("server accept the client...\n");
         pthread_create(&pid, NULL, usethread, connfd); 
-    // }
-    // return 0;
+    }
+    return 0;
 }
