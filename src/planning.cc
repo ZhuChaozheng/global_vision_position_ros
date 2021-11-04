@@ -229,7 +229,8 @@ int main(int argc, char** argv)
                     out_theta_cmd[i] = -out_theta_cmd[i];
                 else
                     out_theta_cmd[i] = 360.0 - out_theta_cmd[i];
-                twist.angular.z = out_theta_cmd[i];
+                
+                twist.angular.z = out_theta_cmd[i] / 360 * 2 * 3.1415;
                 if (i == 2)
                     cout << "out_cmd_vel: " << out_cmd_vel[i] << "out_theta_cmd: " << out_theta_cmd[i] << endl;
                 (*vel_pub).publish(twist);

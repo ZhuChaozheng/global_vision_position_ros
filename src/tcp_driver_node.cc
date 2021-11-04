@@ -42,12 +42,13 @@ void combine_buff(unsigned char buff[], int size, float linear_velocity,
         float angular_velocity)
 {
     int buff_linear = int(linear_velocity * 1000);
-    int buff_angular = int(angular_velocity * 1000);
+    // angular_velocity is in the 0-2pi range
+    int buff_angular = int(angular_velocity * 1000); 
     buff[3] = buff_linear >> 8;
     buff[4] = buff_linear;
     buff[7] = buff_angular >> 8;
     buff[8] = buff_angular;
-    buff[9] = check_num(buff, 8); // generate check num
+    buff[9] = check_num(buff, 9); // generate check num
 }
 
 

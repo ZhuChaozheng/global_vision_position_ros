@@ -56,7 +56,6 @@ void update_status(int connfd, unsigned char buff[], int size)
 //             printf("accomplish reply!\n");
 //         }
 //     }
-    
 // }
 
 void write_func(int marker, unsigned char buff[], int size)
