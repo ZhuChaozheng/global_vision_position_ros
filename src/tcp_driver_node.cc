@@ -42,8 +42,7 @@ void combine_buff(unsigned char buff[], int size, float linear_velocity,
         float angular_velocity)
 {
     int buff_linear = int(linear_velocity * 1000);
-    // angular_velocity is in the 0-2pi range
-    int buff_angular = int(angular_velocity * 1000); 
+    int buff_angular = int(angular_velocity * 1000);
     buff[3] = buff_linear >> 8;
     buff[4] = buff_linear;
     buff[7] = buff_angular >> 8;
@@ -58,21 +57,23 @@ void combine_buff(unsigned char buff[], int size, float linear_velocity,
  */
 void vel_command_callback(const geometry_msgs::TwistConstPtr& msg, 
         int marker)
-{
+{   
+    //std::cout << "Hello" << std::endl;
+
     float linear_velocity = static_cast<float>(msg->linear.x);
     float angular_velocity = static_cast<float>(msg->angular.z);
     unsigned char buff[11];
-    buff[0] = 125; // 7D
+    buff[0] = 123; // 7B
     buff[1] = 122; // 7A
     buff[2] = marker;
     buff[5] = 0;
     buff[6] = 0;
-    buff[10] = 123; // 7B
+    buff[10] = 125; // 7D
     combine_buff(buff, 11, linear_velocity, angular_velocity);
     write_func(marker, buff, sizeof(buff));
 }
 
-/**
+/** 
  * convert the car status to /comm topic
  */
 int main(int argc, char **argv)

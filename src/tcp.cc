@@ -17,6 +17,7 @@ void read_func(int connfd)
         {
             return;
         }
+        //printf("%d \n",buff[1]);
         update_status(connfd, buff, ret);
     }
 }
@@ -26,6 +27,7 @@ void update_status(int connfd, unsigned char buff[], int size)
     // 7B 7B 01(id) 1B 00 00(5) 00(6) 00 00 00(9) 00(10) FB 98 01 
     // 31 40 30 FF FA FF FF FF FD 2E DF CF 7D 
     int id = buff[2];
+   // printf("%d \n",buff[2]);
     car_[id].connfd = connfd;
     car_[id].velocity = (float)((buff[5] << 8) + buff[6]) / 1000;
     car_[id].angular_velocity = (float) (buff[9] << 8 + buff[10]) 
@@ -56,6 +58,7 @@ void update_status(int connfd, unsigned char buff[], int size)
 //             printf("accomplish reply!\n");
 //         }
 //     }
+    
 // }
 
 void write_func(int marker, unsigned char buff[], int size)
@@ -64,6 +67,7 @@ void write_func(int marker, unsigned char buff[], int size)
     if (connfd == 0)
         return;
     write(connfd, buff, size);
+   // std::cout << "send sucess!!" << std::endl;
 }
 
 void *usethread(void *arg)

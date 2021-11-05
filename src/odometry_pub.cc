@@ -65,6 +65,15 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
     } 
 }
 
+void* comm_sub_spin(void* args) 
+{
+    // create ros node handle
+    ros::NodeHandle nh;   
+    // receive /status topic
+    ros::Subscriber sub = nh.subscribe("comm", 1000, comm_call_back);
+    ros::spin();
+    return 0;
+}
 
 int main(int argc, char** argv)
 {
@@ -90,20 +99,27 @@ int main(int argc, char** argv)
         odom_publisher_set_.push_back(odom_publisher_);
         iter ++;
     } 
-    // receive /status topic
-    ros::Subscriber sub = n.subscribe("comm", 1000, comm_call_back);
+    // ************ receive  thread *********
+    pthread_t pid[1];
+    int ret_comm_sub_spin = pthread_create(&pid[0], NULL, comm_sub_spin, NULL);
+    if (ret_comm_sub_spin != 0)
+    {
+        cout << "pthread_create error at ret_comm_sub_spin:error_code= "
+                << ret_comm_sub_spin << endl;
+    }
+    // *********** end thread ************
     tf::TransformListener car_location;
     //用来保存寻找到的坐标变换数据
     tf::StampedTransform tag_0;
-    tf::StampedTransform tag_1;
-    tf::StampedTransform tag_2;
-    tf::StampedTransform tag_3;
-    tf::StampedTransform tag_4;
-    tf::StampedTransform tag_5;
-    tf::StampedTransform tag_6;
-    tf::StampedTransform tag_7;
-    tf::StampedTransform tag_8;
-    tf::StampedTransform tag_9;
+    // tf::StampedTransform tag_1;
+    // tf::StampedTransform tag_2;
+    // tf::StampedTransform tag_3;
+    // tf::StampedTransform tag_4;
+    // tf::StampedTransform tag_5;
+    // tf::StampedTransform tag_6;
+    // tf::StampedTransform tag_7;
+    // tf::StampedTransform tag_8;
+    // tf::StampedTransform tag_9;
     
     // *********** main thread ******************
     // clock_t lastTime = clock(); 
@@ -123,9 +139,9 @@ int main(int argc, char** argv)
         {
             //寻找坐标变换
             car_location.lookupTransform("hik_camera","tag_0",ros::Time(0),tag_0);
-            car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
-            car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
-            car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
+            // car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
+            // car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
+           // car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
          /*   /car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
             car_location.lookupTransform("hik_camera","tag_5",ros::Time(0),tag_5);
             car_location.lookupTransform("hik_camera","tag_6",ros::Time(0),tag_6);
@@ -149,31 +165,31 @@ int main(int argc, char** argv)
                     medianPoint = Point2f(tag_0.getOrigin().x(), 
                             tag_0.getOrigin().y() );
                 }
-                if (marker == 1) {
-            	    quatx = tag_1.getRotation().getX(); 
-                    quaty = tag_1.getRotation().getY();
-                    quatz = tag_1.getRotation().getZ();
-                    quatw = tag_1.getRotation().getW();
-                    medianPoint = Point2f(tag_1.getOrigin().x(), 
-                            tag_1.getOrigin().y());
-                }
-                if (marker == 2) {
-                    quatx = tag_2.getRotation().getX(); 
-                    quaty = tag_2.getRotation().getY();
-                    quatz = tag_2.getRotation().getZ();
-                    quatw = tag_2.getRotation().getW();
+                // if (marker == 1) {
+            	//     quatx = tag_1.getRotation().getX(); 
+                //     quaty = tag_1.getRotation().getY();
+                //     quatz = tag_1.getRotation().getZ();
+                //     quatw = tag_1.getRotation().getW();
+                //     medianPoint = Point2f(tag_1.getOrigin().x(), 
+                //             tag_1.getOrigin().y());
+                // }
+                // if (marker == 2) {
+                //     quatx = tag_2.getRotation().getX(); 
+                //     quaty = tag_2.getRotation().getY();
+                //     quatz = tag_2.getRotation().getZ();
+                //     quatw = tag_2.getRotation().getW();
                      
-                    medianPoint = Point2f(tag_2.getOrigin().x(), 
-                            tag_2.getOrigin().y());
-                }
-                if (marker == 3) {
-                    quatx = tag_3.getRotation().getX(); 
-                    quaty = tag_3.getRotation().getY();
-                    quatz = tag_3.getRotation().getZ();
-                    quatw = tag_3.getRotation().getW();
-                    medianPoint = Point2f(tag_3.getOrigin().x(), 
-                            tag_3.getOrigin().y());
-                }
+                //     medianPoint = Point2f(tag_2.getOrigin().x(), 
+                //             tag_2.getOrigin().y());
+                // }
+                // if (marker == 3) {
+                //     quatx = tag_3.getRotation().getX(); 
+                //     quaty = tag_3.getRotation().getY();
+                //     quatz = tag_3.getRotation().getZ();
+                //     quatw = tag_3.getRotation().getW();
+                //     medianPoint = Point2f(tag_3.getOrigin().x(), 
+                //             tag_3.getOrigin().y());
+                // }
                 quat = tf::Quaternion(quatx, quaty, quatz, quatw);
                 yaw = tf::getYaw(quat);
                 // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
