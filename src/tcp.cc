@@ -2,7 +2,7 @@
 
 void read_func(int connfd)
 {
-    printf("%d\n", connfd);
+    // printf("%d\n", connfd);
     unsigned char buff[MAX_SIZE];
     while(1) 
     {
@@ -17,7 +17,7 @@ void read_func(int connfd)
         {
             return;
         }
-        //printf("%d \n",buff[1]);
+        printf("connfd %d receive %d\n",connfd, buff[1]);
         update_status(connfd, buff, ret);
     }
 }
@@ -34,33 +34,6 @@ void update_status(int connfd, unsigned char buff[], int size)
             / 1000;
 }
 
-// void *write_test(void *arg)
-// {
-//     free(arg);
-//     int marker = 3;
-//     unsigned char buff[6]; // unsigned char is equal to hex
-//     buff[0] = 125; // 7D
-//     buff[1] = 122; // 7A
-//     buff[2] = marker;
-//     buff[3] = 0;
-//     buff[4] = 0;
-//     buff[5] = 123; // 7B
-//     while(1)
-//     {
-//         for (int i = 0; i < 10; i++)
-//         {
-//             sleep(1);
-//             int connfd = car_[i].connfd;
-//             printf("connfd: %d\n", connfd);
-//             if (connfd == 0)
-//                 continue;
-//             write(connfd, buff, sizeof(buff));
-//             printf("accomplish reply!\n");
-//         }
-//     }
-    
-// }
-
 void write_func(int marker, unsigned char buff[], int size)
 {
     int connfd = car_[marker].connfd;
@@ -70,69 +43,50 @@ void write_func(int marker, unsigned char buff[], int size)
    // std::cout << "send sucess!!" << std::endl;
 }
 
-void *usethread(void *arg)
+void sig_chld(int signo)
 {
-    int connfd=*(int *)arg;
-    pthread_detach(pthread_self());
-    free(arg);
-    read_func(connfd);
-    close(connfd);
-    return NULL;
+    pid_t pid;
+    int stat;
+    while((pid = waitpid(-1, &stat, WNOHANG)) > 0)
+        printf("child %d terminated\n", pid);
+    return;
 }
 
 int create_server_and_update_data()
 {
-    int sockfd;
-    socklen_t len;
-    struct sockaddr_in servaddr, cli, cliaddr;
-
-    // socket create and verification
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) {
-        printf("socket creation failed...\n");
-        exit(0);
-    }
-    else
-        printf("Socket successfully created..\n");
+    int listenfd;
+    pid_t childpid;
+    socklen_t clilen;
+    struct sockaddr_in cliaddr, servaddr;
+    void sig_chld(int);
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
     bzero(&servaddr, sizeof(servaddr));
-
-    // assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(PORT);
-
-    // Binding newly created socket to given IP and verification
-    if ((bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr))) != 0) {
-        printf("socket bind failed...\n");
-        exit(0);
-    }
-    else
-        printf("Socket successfully binded..\n");
-
-    // Now server is ready to listen and verification
-    if ((listen(sockfd, 5)) != 0) {
-        printf("Listen failed...\n");
-        exit(0);
-    }
-    else
-        printf("Server listening..\n");
-    // pthread_t write_pid;
-    // pthread_create(&write_pid, NULL, write_test, NULL); 
-    pthread_t pid;
-    while(1)
+    servaddr.sin_port = htons(SERV_PORT);
+    bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+    listen(listenfd, LISTENQ);
+    signal(SIGCHLD, sig_chld);/*must call waitpid()*/
+    for( ; ; )
     {
-        int *connfd=new int();
-        // Accept the data packet from client and verification
-        len = sizeof(cliaddr);
-        *connfd = accept(sockfd, (struct sockaddr*) &cliaddr, &len);
-        // *connfd = accept(sockfd, (SA*)&cli, &len);
-        if (*connfd < 0) {
-            printf("server accept failed...\n");
+        int connfd;
+        clilen = sizeof(cliaddr);
+        if((connfd = accept(listenfd, (struct sockaddr*)&cliaddr, 
+                &clilen)) < 0 )
+        {
+            if(errno == EINTR)
+                continue;/*back to for()*/
+            else
+                printf("accept error\n");
+        }
+        if((childpid = fork()) == 0)
+        {   /*child process*/
+            printf("accept a new connection\n");
+            close(listenfd);/*close listening socket*/
+            read_func(connfd);/*process the request*/
             exit(0);
         }
-        else
-            printf("server accept the client...\n");
-        pthread_create(&pid, NULL, usethread, connfd); 
+        // close(connfd);/*parent closes connected socket*/
     }
     return 0;
 }
