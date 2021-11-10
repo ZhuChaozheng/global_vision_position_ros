@@ -59,8 +59,8 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
         // see the protocol
         int velocity_id = marker * 3 + 1;
         int angular_velocity_id = marker * 3 + 2;
-        (*iter).set_velocity(float_array[velocity_id] / 1000);
-        (*iter).set_angular_velocity(float_array[angular_velocity_id] / 1000);
+        (*iter).set_velocity(float_array[velocity_id]);
+        (*iter).set_angular_velocity(float_array[angular_velocity_id]);
         iter ++;
     } 
 }
