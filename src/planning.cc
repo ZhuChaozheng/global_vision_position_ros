@@ -213,30 +213,32 @@ int main(int argc, char** argv)
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
         {
-            if (out_cmd_vel[i] == 0)
-            {
-                vel_pub ++;
-                i ++;
-                continue;
-            }
-            else
-            {
+            // if (out_cmd_vel[i] == 0)
+            // {
+            //     vel_pub ++;
+            //     i ++;
+            //     continue;
+            // }
+            // else
+            // {
                 geometry_msgs::Twist twist;
-                twist.linear.x = out_cmd_vel[i] / 100.0;
+                // twist.linear.x = out_cmd_vel[i];
+                twist.linear.x = 0;
                 twist.linear.y = 0;
+                twist.angular.z = 1.5;
                 // convert orientation
-                if (out_theta_cmd[i] <= 0)
-                    out_theta_cmd[i] = -out_theta_cmd[i];
-                else
-                    out_theta_cmd[i] = 360.0 - out_theta_cmd[i];
+                // if (out_theta_cmd[i] <= 0)
+                //     out_theta_cmd[i] = -out_theta_cmd[i];
+                // else
+                //     out_theta_cmd[i] = 360.0 - out_theta_cmd[i];
                 
-                twist.angular.z = out_theta_cmd[i] / 360 * 2 * 3.1415;
-                if (i == 2)
-                    cout << "out_cmd_vel: " << out_cmd_vel[i] << "out_theta_cmd: " << out_theta_cmd[i] << endl;
+                // twist.angular.z = out_theta_cmd[i];
+                // if (i == 2)
+                //     cout << "out_cmd_vel: " << out_cmd_vel[i] << "out_theta_cmd: " << out_theta_cmd[i] << endl;
                 (*vel_pub).publish(twist);
                 vel_pub ++;
                 i ++;
-            }            
+            // }            
         }
         rate.sleep();
     }

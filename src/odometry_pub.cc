@@ -11,6 +11,7 @@
 #include "std_msgs/String.h"
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_listener.h>
+#include <tf/transform_broadcaster.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <stdio.h>
@@ -131,6 +132,7 @@ int main(int argc, char** argv)
     lastTime = ros::Time::now();
     bool initial_flag = false; // initial flag
     int j = 0; // mean the speed and angular
+    tf::TransformBroadcaster odom_broadcaster;
     while(n.ok())
     {
 
@@ -199,18 +201,33 @@ int main(int argc, char** argv)
                 (*iter).set_median_point(medianPoint);
                 float velocity = (*iter).get_velocity();
                 float angular_velocity = (*iter).get_angular_velocity();
-                                     
+                
+                geometry_msgs::Quaternion odom_quat = 
+                        tf::createQuaternionMsgFromYaw(yaw);
+                     
+                //first, we'll publish the transform over tf
+                geometry_msgs::TransformStamped odom_trans;
+                odom_trans.header.stamp = currentTime;
+                odom_trans.header.frame_id = "odom";
+                odom_trans.child_frame_id = "base_link";
+                
+                odom_trans.transform.translation.x = medianPoint.x;
+                odom_trans.transform.translation.y = medianPoint.y;
+                odom_trans.transform.translation.z = 0.0;
+                odom_trans.transform.rotation = odom_quat;
+                //send the transform
+                odom_broadcaster.sendTransform(odom_trans);
+
+                //next, we'll publish the odometry message over ROS
                 nav_msgs::Odometry odom;
                 odom.header.stamp = currentTime;
                 odom.header.frame_id = "odom";
-
-                geometry_msgs::Quaternion msg_q;
-                tf::quaternionTFToMsg(quat, msg_q);
+                
                 //set the position
                 odom.pose.pose.position.x = medianPoint.x;
                 odom.pose.pose.position.y = medianPoint.y;
                 odom.pose.pose.position.z = 0.0;
-                odom.pose.pose.orientation = msg_q;
+                odom.pose.pose.orientation = odom_quat;
 
                 //set the velocity
                 odom.child_frame_id = "base_link";

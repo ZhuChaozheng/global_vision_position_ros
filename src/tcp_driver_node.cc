@@ -26,18 +26,6 @@ void *server_thread(void *arg)
     create_server_and_update_data(); // update struct car[10]
 }
 
-// implement the check num algorithm
-unsigned char check_num(unsigned char buff[], int num)
-{
-    unsigned char check_sum = 0;
-    //Verify the data received
-    for(int k = 0; k < num; k++)
-    {
-        check_sum = check_sum ^ buff[k];
-    }
-    return check_sum;
-}
-
 void combine_buff(unsigned char buff[], int size, float linear_velocity, 
         float angular_velocity)
 {

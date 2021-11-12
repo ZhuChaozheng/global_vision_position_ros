@@ -22,6 +22,18 @@ void read_func(int connfd)
     }
 }
 
+// implement the check num algorithm
+unsigned char check_num(unsigned char buff[], int num)
+{
+    unsigned char check_sum = 0;
+    //Verify the data received
+    for(int k = 0; k < num; k++)
+    {
+        check_sum = check_sum ^ buff[k];
+    }
+    return check_sum;
+}
+
 void update_status(int connfd, unsigned char buff[], int size)
 {
     // checking the data verification

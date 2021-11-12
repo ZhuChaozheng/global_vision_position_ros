@@ -29,6 +29,8 @@ void update_status(int sockfd, unsigned char buff[], int size);
 
 void write_func(int marker, unsigned char buff[], int size);
 
+unsigned char check_num(unsigned char buff[], int num);
+
 void *usethread(void *arg);
 
 int create_server_and_update_data();
