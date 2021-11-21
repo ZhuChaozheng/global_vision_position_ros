@@ -133,6 +133,11 @@ int main(int argc, char** argv)
     bool initial_flag = false; // initial flag
     int j = 0; // mean the speed and angular
     tf::TransformBroadcaster odom_broadcaster;
+    tf::Transform lastTransfrom_map_in_odom;
+    lastTransfrom_map_in_odom = tf::Transform(tf::createQuaternionFromRPY
+            (0, 0, 0), tf::Vector3(0, 0, 0));
+    ros::Duration transform_tolerance_;
+    transform_tolerance_.fromSec(0.1);
     while(n.ok())
     {
 
@@ -194,6 +199,8 @@ int main(int argc, char** argv)
                 // }
                 quat = tf::Quaternion(quatx, quaty, quatz, quatw);
                 yaw = tf::getYaw(quat);
+
+                // float angle = tag_3.getRotation().getAngle();
                 // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
                 angle = convertDegree(yaw); 
                 // update the states

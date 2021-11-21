@@ -11,7 +11,7 @@ using namespace std;
 /*
  * define data space
  */
-int boid_num = 3;
+int boid_num = 9;
 extern float *pos_x_array = new float[boid_num];
 extern float *pos_y_array = new float[boid_num];
 extern float *vel_x_array = new float[boid_num];
@@ -30,20 +30,20 @@ float *out_theta_cmd = new float[boid_num];
  */
 void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 {
-        int k = marker;
-        nav_msgs::Odometry robotOdometryMsg = *locator;
-        if (k == 0)
-        {
-            ROS_INFO("marker: %d, robot Position: %f, %f", k, robotOdometryMsg.pose.pose.position.x,
-                 robotOdometryMsg.pose.pose.position.y);
-            ROS_INFO("marker: %d, robot Heading: linear:%f, angular:%f", k, robotOdometryMsg.twist.twist.linear.x,
-                 robotOdometryMsg.twist.twist.angular.z);    
-        }   
-        pos_x_array[k] = robotOdometryMsg.pose.pose.position.x * 100;
-        pos_y_array[k] = robotOdometryMsg.pose.pose.position.y * 100;
-        vel_x_array[k] = robotOdometryMsg.twist.twist.linear.x * 100;
-        cout << "%d" << k << " vel: " << vel_x_array[k] << endl;
-        vel_y_array[k] = convertDegree(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  // vel_y -> yaw(0-360)    
+    int k = marker;
+    nav_msgs::Odometry robotOdometryMsg = *locator;
+    if (k == 0)
+    {
+        ROS_INFO("marker: %d, robot Position: %f, %f", k, robotOdometryMsg.pose.pose.position.x,
+             robotOdometryMsg.pose.pose.position.y);
+        ROS_INFO("marker: %d, robot Heading: linear:%f, angular:%f", k, robotOdometryMsg.twist.twist.linear.x,
+             robotOdometryMsg.twist.twist.angular.z);    
+    }   
+    pos_x_array[k] = robotOdometryMsg.pose.pose.position.x * 100;
+    pos_y_array[k] = robotOdometryMsg.pose.pose.position.y * 100;
+    vel_x_array[k] = robotOdometryMsg.twist.twist.linear.x * 100;
+    cout << "%d" << k << " vel: " << vel_x_array[k] << endl;
+    vel_y_array[k] = convertDegree(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  // vel_y -> yaw(0-360)    
         
 }
 
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "planning");
     // create ros node handle
     ros::NodeHandle n;
-    ros::Rate rate(15);  
+    ros::Rate rate(30);  
     
     // ************ udp control interface thread *********
     pthread_t tids[1];

@@ -25,4 +25,11 @@ target_link_libraries(tcp_driver_node GlobalVisionLibrary)
 #add_dependencies(control_sub ${${PROJECT_NAME}_EXPORTED_TARGETS}
 #	${catkin_EXPORTED_TARGETS})
 #target_link_libraries(control_sub GlobalVisionLibrary)
-
+ 
+add_executable(move_client move_client.cpp)
+target_link_libraries(move_client ${catkin_LIBRARIES})
+add_dependencies(move_client ${PROJECT_NAME}_gencpp)
+ 
+add_executable(move_server move_server.cpp)
+target_link_libraries(move_server GlobalVisionLibrary)
+add_dependencies(move_server ${PROJECT_NAME}_gencpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
