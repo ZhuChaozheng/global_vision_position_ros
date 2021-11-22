@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "odometry_pub");
     ros::NodeHandle n;    
-    ros::Rate rate(20); 
+    ros::Rate rate(10); 
     ros::Publisher odom_publisher_;
     vector<ros::Publisher> odom_publisher_set_;
     // init parameter of pid through rosparams
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
         stringstream ss;
         ss << front_str << marker;
         string topic = ss.str();
-        odom_publisher_ = n.advertise<nav_msgs::Odometry>(topic, 50);
+        odom_publisher_ = n.advertise<nav_msgs::Odometry>(topic, 10);
         odom_publisher_set_.push_back(odom_publisher_);
         iter ++;
     } 
