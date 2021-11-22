@@ -12,7 +12,7 @@ using namespace std;
 /*
  * define data space
  */
-int boid_num = 10;
+int boid_num = 9;
 float *pos_x_array = new float[boid_num];
 float *pos_y_array = new float[boid_num];
 float *pos_theta_array = new float[boid_num];
@@ -55,7 +55,7 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
     // current pose, x, y, theta
     pos_x_array[k] = robotOdometryMsg.pose.pose.position.x;
     pos_y_array[k] = robotOdometryMsg.pose.pose.position.y;
-    // thata -> yaw(0-3.14) 
+    // thata -> yaw(-3.14 ~ 3.14) 
     pos_theta_array[k] = tf::getYaw(robotOdometryMsg.pose.pose.orientation);  
 }
 
@@ -81,18 +81,18 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
                 vel_pub != vel_pub_set_.end();)  
         {
             // 1 is the parameter, follow the specific car preference
-            vel_msgs.angular.z = 1 * (atan2((car_target_pose.y * 0.1 * i)- 
+            vel_msgs.angular.z = 1 * (atan2((car_target_pose.y + 0.1 * i)- 
                     pos_y_array[i], car_target_pose.x - 
                     pos_x_array[i]) - pos_theta_array[i]);
 
-            double angle_to_goal = atan2((car_target_pose.y * 0.1 * i) - 
+            double angle_to_goal = atan2((car_target_pose.y + 0.1 * i) - 
                     pos_y_array[i], car_target_pose.x - 
                     pos_x_array[i]);
             ROS_INFO("marker = %d, angle_to_goal = %f, current_angle = %f", 
                     i, angle_to_goal, pos_theta_array[i]);
             // 0.125 is the parameter, follow the specific car preference
             vel_msgs.linear.x = 0.125 * sqrt(pow(car_target_pose.x - 
-                    pos_x_array[i], 2) + pow((car_target_pose.y * 0.1 * i) - 
+                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.1 * i) - 
                     pos_y_array[i], 2));
             
             feedback.present_car_x = pos_x_array[i];
@@ -100,11 +100,11 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
             feedback.present_car_theta = pos_theta_array[i];
             as->publishFeedback(feedback);
             break_flag = sqrt(pow(car_target_pose.x - 
-                    pos_x_array[i], 2) + pow((car_target_pose.y * 0.1 * i) - 
+                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.1 * i) - 
                     pos_y_array[i], 2));
             ROS_INFO("break_flag = %f", break_flag);
             
-            if((break_flag < 0.1) | (pos_x_array[i] < 0.001))
+            if((break_flag < 0.1) | (abs(pos_x_array[i]) < 0.001))
             {
                 flag_array[i] = false;// true 1, flase 0
             }
@@ -116,7 +116,7 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
         }
         // all break flag is 0
         bool flag = false;
-        for (int j = 0; j <= 9; j++)
+        for (int j = 0; j <= boid_num; j++)
             flag = flag | flag_array[j];
         if (!flag)
             break;
@@ -129,42 +129,9 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
 
 int main(int argc, char** argv) 
 {
-    float *tar_pos_x_array = new float[boid_num];
-    float *tar_pos_y_array = new float[boid_num];
-    float *tar_vel_x_array = new float[boid_num];
-    float *tar_vel_y_array = new float[boid_num];
-    float border_x=220.0, border_y=150.0, coeff_vel=7.0;
-    /*
-     * define target information
-     *
-     */
-    for (int i = 0; i <= 1; i ++)
-    {
-        tar_pos_x_array[i] = 200;
-        tar_pos_y_array[i] = 75;
-        tar_vel_x_array[i] = 7.5;
-        tar_vel_y_array[i] = 0;
-    }
-    /*
-     * define obtacles
-     */
-    int ob_num = 0;
-    float ob_pos_x, ob_pos_y;
-    float *ob_pos_x_array = new float[ob_num];
-    float *ob_pos_y_array = new float[ob_num];
-
-    for(int j = 0; j < ob_num; j ++)
-    {
-        ob_pos_x = 110.0;
-        ob_pos_y = 75.0;        
-        ob_pos_x_array[j] = ob_pos_x;
-        ob_pos_y_array[j] = ob_pos_y;
-    }
-
     ros::init(argc, argv, "move_server");
     // create ros node handle
     ros::NodeHandle n;
-    ros::Rate rate(30);
     
     // create ros node handle
     ros::NodeHandle nh;   
@@ -183,7 +150,7 @@ int main(int argc, char** argv)
     }
     ros::Publisher vel_pub_;
     
-    for (int i = 0; i < boid_num; i ++)
+    for (int i = 0; i <= boid_num; i ++)
     {
         string front_str = "/marker";
         string end_str = "/cmd_vel";
