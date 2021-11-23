@@ -38,6 +38,13 @@ float *out_theta_cmd = new float[boid_num];
 
 vector<ros::Publisher> vel_pub_set_;
 
+float convertYaw(float yaw)
+{
+    if (yaw < 0)
+        yaw = 2 * 3.14 + yaw;
+    return yaw;
+}
+
 /* 
  * call back function
  */
@@ -55,9 +62,11 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
     // current pose, x, y, theta
     pos_x_array[k] = robotOdometryMsg.pose.pose.position.x;
     pos_y_array[k] = robotOdometryMsg.pose.pose.position.y;
-    // thata -> yaw(-3.14 ~ 3.14) 
-    pos_theta_array[k] = tf::getYaw(robotOdometryMsg.pose.pose.orientation);  
+    // thata -> yaw(0 ~ 2 * 3.14) 
+    pos_theta_array[k] = convertYaw(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  
 }
+
+
 
 void execute(const global_vision_position::MoveGoalConstPtr& goal, 
         Server* as)
@@ -84,7 +93,7 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
             vel_msgs.angular.z = 1 * (atan2((car_target_pose.y + 0.1 * i)- 
                     pos_y_array[i], car_target_pose.x - 
                     pos_x_array[i]) - pos_theta_array[i]);
-
+            
             double angle_to_goal = atan2((car_target_pose.y + 0.1 * i) - 
                     pos_y_array[i], car_target_pose.x - 
                     pos_x_array[i]);
@@ -94,7 +103,8 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
             vel_msgs.linear.x = 0.125 * sqrt(pow(car_target_pose.x - 
                     pos_x_array[i], 2) + pow((car_target_pose.y + 0.1 * i) - 
                     pos_y_array[i], 2));
-            
+            ROS_INFO("linear.x  = %f, angular.z = %f", vel_msgs.linear.x,
+                    vel_msgs.angular.z);
             feedback.present_car_x = pos_x_array[i];
             feedback.present_car_y = pos_y_array[i];
             feedback.present_car_theta = pos_theta_array[i];
@@ -136,7 +146,7 @@ int main(int argc, char** argv)
     // create ros node handle
     ros::NodeHandle nh;   
     vector<ros::Subscriber> odom_sub_set_;
-    for (int i = 0; i <= boid_num; i ++)
+    for (int i = 0; i < boid_num; i ++)
     {
         string front_str = "/odom_";
         stringstream ss;
@@ -150,7 +160,7 @@ int main(int argc, char** argv)
     }
     ros::Publisher vel_pub_;
     
-    for (int i = 0; i <= boid_num; i ++)
+    for (int i = 0; i < boid_num; i ++)
     {
         string front_str = "/marker";
         string end_str = "/cmd_vel";

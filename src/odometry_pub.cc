@@ -245,7 +245,7 @@ int main(int argc, char** argv)
                 //publish the message
                 for(auto odom_publisher = odom_publisher_set_.begin(); 
                     odom_publisher != odom_publisher_set_.end();)
-                {    
+                {
                     string front_str = "/odom_";
                     stringstream ss;
                     ss << front_str << marker;
