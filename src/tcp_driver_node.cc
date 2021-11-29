@@ -47,7 +47,6 @@ void vel_command_callback(const geometry_msgs::TwistConstPtr& msg,
         int marker)
 {   
     //std::cout << "Hello" << std::endl;
-
     float linear_velocity = static_cast<float>(msg->linear.x);
     float angular_velocity = static_cast<float>(msg->angular.z);
     unsigned char buff[11];

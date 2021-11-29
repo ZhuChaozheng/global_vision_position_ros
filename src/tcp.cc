@@ -47,11 +47,15 @@ void update_status(int connfd, unsigned char buff[], int size)
     // 31 40 30 FF FA FF FF FF FD 2E DF CF 7D 
     int id = buff[2];
     car_[id].connfd = connfd;
-    int temp = ((buff[9] << 8) + buff[10]);
-    car_[id].velocity = (float)(((buff[5] << 8) + buff[6]) / 1000.0);
+    int temp56 = (buff[5] << 8) + buff[6];
+    if (temp56 > 32768)
+        temp56 = temp56 - 65525;
+    car_[id].velocity = (float)(temp56 / 1000.0);
     // printf("temp %d \n", temp);
-    car_[id].angular_velocity = (float)(((buff[9] << 8) + buff[10]) 
-            / 1000.0);
+    int temp910 = (buff[9] << 8) + buff[10];
+    if (temp910 > 32768)
+        temp910 = temp910 - 65525;
+    car_[id].angular_velocity = (float)(temp910 / 1000.0);
     // printf("angular_velocity %f \n", car_[id].angular_velocity);
 }
 
