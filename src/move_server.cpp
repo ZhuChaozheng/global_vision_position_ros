@@ -12,7 +12,7 @@ using namespace std;
 /*
  * define data space
  */
-int boid_num = 9;
+int boid_num = 1;
 float *pos_x_array = new float[boid_num];
 float *pos_y_array = new float[boid_num];
 float *pos_theta_array = new float[boid_num];
@@ -38,13 +38,6 @@ float *out_theta_cmd = new float[boid_num];
 
 vector<ros::Publisher> vel_pub_set_;
 
-float convertYaw(float yaw)
-{
-    if (yaw < 0)
-        yaw = 2 * 3.14 + yaw;
-    return yaw;
-}
-
 /* 
  * call back function
  */
@@ -52,7 +45,7 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
 {
     int k = marker;
     nav_msgs::Odometry robotOdometryMsg = *locator;
-    if (k == 0)
+    if (k == 1)
     {
         ROS_INFO("marker: %d, robot Position: %f, %f", k, robotOdometryMsg.pose.pose.position.x,
              robotOdometryMsg.pose.pose.position.y);
@@ -63,7 +56,7 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
     pos_x_array[k] = robotOdometryMsg.pose.pose.position.x;
     pos_y_array[k] = robotOdometryMsg.pose.pose.position.y;
     // thata -> yaw(0 ~ 2 * 3.14) 
-    pos_theta_array[k] = convertYaw(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  
+    pos_theta_array[k] = tf::getYaw(robotOdometryMsg.pose.pose.orientation);  
 }
 
 
@@ -90,31 +83,38 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
                 vel_pub != vel_pub_set_.end();)  
         {
             // 1 is the parameter, follow the specific car preference
-            vel_msgs.angular.z = 1 * (atan2((car_target_pose.y + 0.1 * i)- 
+            // 安全距离
+            vel_msgs.angular.z = -1.0 * (atan2((car_target_pose.y + 0.5 * i)- 
                     pos_y_array[i], car_target_pose.x - 
                     pos_x_array[i]) - pos_theta_array[i]);
             
-            double angle_to_goal = atan2((car_target_pose.y + 0.1 * i) - 
+            double angle_to_goal = atan2((car_target_pose.y + 0.5 * i) - 
                     pos_y_array[i], car_target_pose.x - 
                     pos_x_array[i]);
-            ROS_INFO("marker = %d, angle_to_goal = %f, current_angle = %f", 
-                    i, angle_to_goal, pos_theta_array[i]);
+            if(i == 1)
+            {
+                
+                ROS_INFO("marker = %d, angle_to_goal = %f, current_angle = %f", 
+                        i, angle_to_goal, pos_theta_array[i]);
+                ROS_INFO("linear.x  = %f, angular.z = %f", vel_msgs.linear.x,
+                        vel_msgs.angular.z);
+            }
             // 0.125 is the parameter, follow the specific car preference
-            vel_msgs.linear.x = 0.125 * sqrt(pow(car_target_pose.x - 
-                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.1 * i) - 
+            vel_msgs.linear.x = 0.15 * sqrt(pow(car_target_pose.x - 
+                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.5 * i) - 
                     pos_y_array[i], 2));
-            ROS_INFO("linear.x  = %f, angular.z = %f", vel_msgs.linear.x,
-                    vel_msgs.angular.z);
+            
             feedback.present_car_x = pos_x_array[i];
             feedback.present_car_y = pos_y_array[i];
             feedback.present_car_theta = pos_theta_array[i];
             as->publishFeedback(feedback);
             break_flag = sqrt(pow(car_target_pose.x - 
-                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.1 * i) - 
+                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.5 * i) - 
                     pos_y_array[i], 2));
             ROS_INFO("break_flag = %f", break_flag);
             
-            if((break_flag < 0.1) | (abs(pos_x_array[i]) < 0.001))
+            //误差
+            if((break_flag < 0.05) | (abs(pos_x_array[i]) < 0.001))
             {
                 flag_array[i] = false;// true 1, flase 0
             }
@@ -126,7 +126,7 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
         }
         // all break flag is 0
         bool flag = false;
-        for (int j = 0; j <= boid_num; j++)
+        for (int j = 0; j < boid_num; j++)
             flag = flag | flag_array[j];
         if (!flag)
             break;
@@ -135,6 +135,20 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
     // 当action完成后，向客户端返回结果
     ROS_INFO("carMove is finished.");
     as->setSucceeded();
+
+    for(auto vel_pub = vel_pub_set_.begin(); 
+                vel_pub != vel_pub_set_.end();)  
+        {
+            // 1 is the parameter, follow the specific car preference
+            // 安全距离
+            vel_msgs.angular.z = 0.0;
+            // 0.125 is the parameter, follow the specific car preference
+            vel_msgs.linear.x = 0.0;
+            (*vel_pub).publish(vel_msgs);
+            vel_pub ++;
+        }
+
+
 }
 
 int main(int argc, char** argv) 

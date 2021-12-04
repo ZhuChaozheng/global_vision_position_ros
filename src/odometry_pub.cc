@@ -112,7 +112,7 @@ int main(int argc, char** argv)
     tf::TransformListener car_location;
     //用来保存寻找到的坐标变换数据
     tf::StampedTransform tag_0;
-    // tf::StampedTransform tag_1;
+    tf::StampedTransform tag_1;
     // tf::StampedTransform tag_2;
     // tf::StampedTransform tag_3;
     // tf::StampedTransform tag_4;
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
         {
             //寻找坐标变换
             car_location.lookupTransform("hik_camera","tag_0",ros::Time(0),tag_0);
-            // car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
+            car_location.lookupTransform("hik_camera","tag_1",ros::Time(0),tag_1);
             // car_location.lookupTransform("hik_camera","tag_2",ros::Time(0),tag_2);
            // car_location.lookupTransform("hik_camera","tag_3",ros::Time(0),tag_3);
          /*   /car_location.lookupTransform("hik_camera","tag_4",ros::Time(0),tag_4);
@@ -172,14 +172,14 @@ int main(int argc, char** argv)
                     medianPoint = Point2f(tag_0.getOrigin().x(), 
                             tag_0.getOrigin().y() );
                 }
-                // if (marker == 1) {
-            	//     quatx = tag_1.getRotation().getX(); 
-                //     quaty = tag_1.getRotation().getY();
-                //     quatz = tag_1.getRotation().getZ();
-                //     quatw = tag_1.getRotation().getW();
-                //     medianPoint = Point2f(tag_1.getOrigin().x(), 
-                //             tag_1.getOrigin().y());
-                // }
+                if (marker == 1) {
+            	    quatx = tag_1.getRotation().getX(); 
+                    quaty = tag_1.getRotation().getY();
+                    quatz = tag_1.getRotation().getZ();
+                    quatw = tag_1.getRotation().getW();
+                    medianPoint = Point2f(tag_1.getOrigin().x(), 
+                            tag_1.getOrigin().y());
+                }
                 // if (marker == 2) {
                 //     quatx = tag_2.getRotation().getX(); 
                 //     quaty = tag_2.getRotation().getY();

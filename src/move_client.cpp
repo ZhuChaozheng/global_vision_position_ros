@@ -48,12 +48,12 @@ int main(int argc, char** argv)
     client.waitForServer();
     ROS_INFO("Action server started, sending goal.");
     // ros::Subscriber sub = n.subscribe("car1/pose",10,&posecallback); //订阅小乌龟的位置信息
-    // sleep(2);
+    // sleep(2);5
     // 创建一个action的goal
     global_vision_position::MoveGoal goal;
     ROS_INFO("x = %f", car_current_pose.x);
-    goal.car_target_x = 1.4;
-    goal.car_target_y = 0.4;
+    goal.car_target_x = 0.8;
+    goal.car_target_y = 1.0;
     goal.car_target_theta = 0;
     client.sendGoal(goal, &doneCb, &activeCb, &feedbackCb);
     
