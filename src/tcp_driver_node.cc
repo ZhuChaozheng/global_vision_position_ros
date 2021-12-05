@@ -94,7 +94,9 @@ int main(int argc, char **argv)
         std::stringstream ss;
         for (int i = 0; i <= 9; i++)
             ss << car_[i].connfd << " " << car_[i].velocity << " " 
-                  << car_[i].angular_velocity << " ";
+                  << car_[i].angular_velocity << " " 
+                  << car_[i].left_wheel_velocity << " "
+                  << car_[i].right_wheel_velocity;
         msg.data = ss.str();
         // ROS_INFO("%s", msg.data.c_str());
         chatter_pub.publish(msg);

@@ -33,18 +33,24 @@ unsigned char check_num(unsigned char buff[], int num)
     }
     return check_sum;
 }
-
+/* 
+ * update status from 35 bytes data
+ */
 void update_status(int connfd, unsigned char buff[], int size)
 {
     // checking the data verification
-    if (size != 27)
+    // if (size != 27)
+    if (size != 35)
         return;
     // head 7B 7B, tail 7D
-    if ((buff[0] != 123) | (buff[1] != 123) | buff[26] != 125)
+    // if ((buff[0] != 123) | (buff[1] != 123) | buff[26] != 125
+    //     | buff[34] != 125)
+    if ((buff[0] != 123) | (buff[1] != 123) | buff[34] != 125)
         return;
 
-    // 7B 7B 01(id) 1B 00 00(5) 00(6) 00 00 05(9) 4F(10) FB 98 01 
-    // 31 40 30 FF FA FF FF FF FD 2E DF CF 7D 
+    // 7B 7B 01(id) 1B 00 00(5) 00(6) 00 00 05(9) 4F(10) 
+    // FB 98 01 31 40 30 FF FA FF FF FF FD 2E DF CF 7D 
+
     int id = buff[2];
     car_[id].connfd = connfd;
     int temp56 = (buff[5] << 8) + buff[6];
@@ -52,11 +58,23 @@ void update_status(int connfd, unsigned char buff[], int size)
         temp56 = temp56 - 65525;
     car_[id].velocity = (float)(temp56 / 1000.0);
     // printf("temp %d \n", temp);
-    int temp910 = (buff[9] << 8) + buff[10];
-    if (temp910 > 32768)
-        temp910 = temp910 - 65525;
-    car_[id].angular_velocity = (float)(temp910 / 1000.0);
+    // angular velocity comes from gyro
+    int temp2122 = (buff[21] << 8) + buff[22];
+    if (temp2122 > 32768)
+        temp2122 = temp2122 - 65525;
+    car_[id].angular_velocity = (float)(temp2122 / 3753.0);
     // printf("angular_velocity %f \n", car_[id].angular_velocity);
+    // 25-26 left wheel velocity 
+    int temp2526 = (buff[25] << 8) + buff[26];
+    if (temp2526 > 32768)
+        temp2526 = temp2526 - 65525;
+    car_[id].left_wheel_velocity = (float)(temp2526 / 1000.0);
+    // 27-28 right wheel velocity
+    int temp2728 = (buff[27] << 8) + buff[28];
+    if (temp2728 > 32768)
+        temp2728 = temp2728 - 65525;
+    car_[id].right_wheel_velocity = (float)(temp2728 / 1000.0);
+    
 }
 
 // void *write_test(void *arg)

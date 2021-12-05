@@ -19,6 +19,8 @@ typedef struct _car
     int connfd;
     float velocity;
     float angular_velocity;
+    float left_wheel_velocity;
+    float right_wheel_velocity;
 }car;
 
 car car_[10];

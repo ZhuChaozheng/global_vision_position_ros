@@ -43,7 +43,7 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
     str = const_cast<char *>(msg->data.c_str());
     char *pch;
     pch = strtok (str," "); // match space
-    float float_array[30];
+    float float_array[50];
     float pch_f;
     int i = 0;
     while (pch != NULL)
@@ -58,8 +58,8 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg)
     {
         int marker = (*iter).get_marker();
         // see the protocol
-        int velocity_id = marker * 3 + 1;
-        int angular_velocity_id = marker * 3 + 2;
+        int velocity_id = marker * 5 + 1;
+        int angular_velocity_id = marker * 5 + 2;
         (*iter).set_velocity(float_array[velocity_id]);
         (*iter).set_angular_velocity(float_array[angular_velocity_id]);
         iter ++;
