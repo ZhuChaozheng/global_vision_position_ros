@@ -19,6 +19,12 @@ float convertDegree(double yaw)
     return 180 * yaw / 3.1415926;
 }
 
+float convert_pi(double yaw)
+{
+	if (yaw < 0)
+		yaw = yaw + 2 * 3.1415926;
+	return yaw;
+}
 
 void Car::update_parameters(string ip, float target_angle,
 			float target_velocity, float target_point_x, 

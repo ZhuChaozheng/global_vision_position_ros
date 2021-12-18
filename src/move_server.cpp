@@ -56,7 +56,7 @@ void robotOdomCallback(const nav_msgs::OdometryConstPtr& locator, int marker)
     pos_x_array[k] = robotOdometryMsg.pose.pose.position.x;
     pos_y_array[k] = robotOdometryMsg.pose.pose.position.y;
     // thata -> yaw(0 ~ 2 * 3.14) 
-    pos_theta_array[k] = tf::getYaw(robotOdometryMsg.pose.pose.orientation);  
+    pos_theta_array[k] = convert_pi(tf::getYaw(robotOdometryMsg.pose.pose.orientation));  
 }
 
 
@@ -82,15 +82,14 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
         {
+            double angle_to_goal = convert_pi(atan2((
+                    car_target_pose.y + 0.5 * i) - pos_y_array[i],
+                    car_target_pose.x - pos_x_array[i]));
             // 1 is the parameter, follow the specific car preference
             // 安全距离
-            vel_msgs.angular.z = -1.0 * (atan2((car_target_pose.y + 0.5 * i)- 
-                    pos_y_array[i], car_target_pose.x - 
-                    pos_x_array[i]) - pos_theta_array[i]);
+            vel_msgs.angular.z = -1.0 * (angle_to_goal - 
+                    pos_theta_array[i]);
             
-            double angle_to_goal = atan2((car_target_pose.y + 0.5 * i) - 
-                    pos_y_array[i], car_target_pose.x - 
-                    pos_x_array[i]);
             if(i == 1)
             {
                 

@@ -32,4 +32,5 @@ add_dependencies(move_client ${PROJECT_NAME}_gencpp)
  
 add_executable(move_server move_server.cpp)
 target_link_libraries(move_server GlobalVisionLibrary)
+
 add_dependencies(move_server ${PROJECT_NAME}_gencpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

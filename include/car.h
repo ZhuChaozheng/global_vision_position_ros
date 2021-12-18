@@ -74,5 +74,6 @@ public:
 	float get_target_velocity() { return target_velocity_; }
 };
 float convertDegree(double yaw);
+float convert_pi(double yaw);
 
 #endif //CAR_H
