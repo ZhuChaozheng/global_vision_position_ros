@@ -18,6 +18,8 @@ float *pos_y_array = new float[boid_num];
 float *pos_theta_array = new float[boid_num];
 bool  *flag_array = new bool[boid_num];
 bool modi_flag = true;
+double _epsilon = 1e-6;
+double _linear_velocity = 0.15;
 
 typedef actionlib::SimpleActionServer<global_vision_position::MoveAction> 
     Server;
@@ -77,7 +79,7 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
     
     ros::Rate r(10);
     while(ros::ok())
-    {  
+    {
         int i = 0;
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
@@ -85,40 +87,49 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
             double angle_to_goal = convert_pi(atan2((
                     car_target_pose.y + 0.5 * i) - pos_y_array[i],
                     car_target_pose.x - pos_x_array[i]));
+
             // 1 is the parameter, follow the specific car preference
             // 安全距离
-            vel_msgs.angular.z = -1.0 * (angle_to_goal - 
-                    pos_theta_array[i]);
-            
+            // vel_msgs.angular.z = -1.0 * (angle_to_goal - 
+            //         pos_theta_array[i]);
             if(i == 1)
             {
-                
                 ROS_INFO("marker = %d, angle_to_goal = %f, current_angle = %f", 
                         i, angle_to_goal, pos_theta_array[i]);
                 ROS_INFO("linear.x  = %f, angular.z = %f", vel_msgs.linear.x,
                         vel_msgs.angular.z);
             }
-            // 0.125 is the parameter, follow the specific car preference
-            vel_msgs.linear.x = 0.15 * sqrt(pow(car_target_pose.x - 
+
+            double look_ahead_distance = sqrt(pow(car_target_pose.x - 
                     pos_x_array[i], 2) + pow((car_target_pose.y + 0.5 * i) - 
                     pos_y_array[i], 2));
-            
+            // 0.125 is the parameter, follow the specific car preference
+            // vel_msgs.linear.x = 0.15 * look_ahead_distance;
+            vel_msgs.linear.x = 0;
+            vel_msgs.angular.z = 0;
+
+            double angular_velocity = 0;
             feedback.present_car_x = pos_x_array[i];
             feedback.present_car_y = pos_y_array[i];
             feedback.present_car_theta = pos_theta_array[i];
             as->publishFeedback(feedback);
-            break_flag = sqrt(pow(car_target_pose.x - 
-                    pos_x_array[i], 2) + pow((car_target_pose.y + 0.5 * i) - 
-                    pos_y_array[i], 2));
-            ROS_INFO("break_flag = %f", break_flag);
-            
-            //误差
-            if((break_flag < 0.05) | (abs(pos_x_array[i]) < 0.001))
+
+            if (std::abs(std::sin(angle_to_goal)) >= _epsilon) 
             {
-                flag_array[i] = false;// true 1, flase 0
+                double radius = 0.5 * (look_ahead_distance / 
+                        std::sin(angle_to_goal));
+                
+                double linear_velocity = _linear_velocity;
+                if (std::abs(radius) >= _epsilon)
+                    angular_velocity = linear_velocity / radius;
+                vel_msgs.linear.x = linear_velocity;
+                vel_msgs.angular.z = angular_velocity;
+
+                flag_array[i] = true; // true 1, flase 0
             }
             else
-                flag_array[i] = true;
+                flag_array[i] = false;
+
             (*vel_pub).publish(vel_msgs);
             vel_pub ++;
             i ++; 
