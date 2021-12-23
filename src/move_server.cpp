@@ -114,7 +114,8 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
             feedback.present_car_theta = pos_theta_array[i];
             as->publishFeedback(feedback);
 
-            if (std::abs(std::sin(angle_to_goal)) >= _epsilon) 
+            if (std::abs(std::sin(angle_to_goal)) >= _epsilon & 
+                    flag_array[i]) 
             {
                 double radius = 0.5 * (look_ahead_distance / 
                         std::sin(angle_to_goal));
