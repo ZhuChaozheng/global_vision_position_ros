@@ -84,10 +84,12 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
         {
-            double angle_to_goal = convert_pi(atan2((
+            double move_orientation = convert_pi(atan2((
                     car_target_pose.y + 0.5 * i) - pos_y_array[i],
                     car_target_pose.x - pos_x_array[i]));
 
+            doube angle_to_goal = (move_orientation - 
+                    pos_theta_array[i]);
             // 1 is the parameter, follow the specific car preference
             // 安全距离
             // vel_msgs.angular.z = -1.0 * (angle_to_goal - 
