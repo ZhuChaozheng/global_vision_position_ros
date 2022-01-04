@@ -1,0 +1,9 @@
+<launch>
+  <!-- launch reset node -->
+  <node pkg="global_vision_position" type="move_server" respawn="false" name="move_server" >
+  </node> 
+
+  <node pkg="global_vision_position" type="move_client" respawn="false" name="move_client" output="screen">
+  </node>
+
+</launch>
