@@ -20,6 +20,7 @@ bool  *flag_array = new bool[boid_num];
 bool modi_flag = true;
 double _epsilon = 1e-6;
 double _linear_velocity = 0.15;
+double _ratio = 1.0;
 
 typedef actionlib::SimpleActionServer<global_vision_position::MoveAction> 
     Server;
@@ -84,12 +85,18 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
         for(auto vel_pub = vel_pub_set_.begin(); 
                 vel_pub != vel_pub_set_.end();)  
         {
-            double move_orientation = convert_pi(atan2((
+            // tf::Vector3 v1(pos_x_array[i], pos_y_array[i], 0);
+            // tf::Vector3 v2(car_target_pose.x, 
+            //         car_target_pose.y + 0.5 * i, 0);
+            
+            // double angle_to_goal = tf::tfAngle(v1, v2);
+            
+            double angle_to_goal = convert_pi(atan2((
                     car_target_pose.y + 0.5 * i) - pos_y_array[i],
                     car_target_pose.x - pos_x_array[i]));
 
-            doube angle_to_goal = (move_orientation - 
-                    pos_theta_array[i]);
+            // doube angle_to_goal = (move_orientation - 
+            //         pos_theta_array[i]);
             // 1 is the parameter, follow the specific car preference
             // 安全距离
             // vel_msgs.angular.z = -1.0 * (angle_to_goal - 
@@ -110,25 +117,27 @@ void execute(const global_vision_position::MoveGoalConstPtr& goal,
             vel_msgs.linear.x = 0;
             vel_msgs.angular.z = 0;
 
-            double angular_velocity = 0;
+
             feedback.present_car_x = pos_x_array[i];
             feedback.present_car_y = pos_y_array[i];
             feedback.present_car_theta = pos_theta_array[i];
             as->publishFeedback(feedback);
-
-            if (std::abs(std::sin(angle_to_goal)) >= _epsilon & 
-                    flag_array[i]) 
+            if (look_ahead_distance > (_linear_velocity * _ratio) )
             {
-                double radius = 0.5 * (look_ahead_distance / 
-                        std::sin(angle_to_goal));
-                
-                double linear_velocity = _linear_velocity;
-                if (std::abs(radius) >= _epsilon)
-                    angular_velocity = linear_velocity / radius;
-                vel_msgs.linear.x = linear_velocity;
-                vel_msgs.angular.z = angular_velocity;
+                double angular_velocity = 0;
+                if (std::abs(std::sin(angle_to_goal)) >= _epsilon)
+                {
+                    double radius = 0.5 * (look_ahead_distance / 
+                            std::sin(angle_to_goal));
+                    
+                    double linear_velocity = _linear_velocity;
+                    if (std::abs(radius) >= _epsilon)
+                        angular_velocity = linear_velocity / radius;
+                    vel_msgs.linear.x = linear_velocity;
+                    vel_msgs.angular.z = angular_velocity;
 
-                flag_array[i] = true; // true 1, flase 0
+                    flag_array[i] = true; // true 1, flase 0
+                }
             }
             else
                 flag_array[i] = false;
