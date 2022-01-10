@@ -20,7 +20,6 @@ float *pos_y_array = new float[boid_num];
 float *pos_theta_array = new float[boid_num];
 bool *flag_array = new bool[boid_num];
 bool modi_flag = true;
-double _epsilon = 1e-6;
 double _linear_velocity = 0.15;
 double _ratio = 0.8;  // 误差比例
 
