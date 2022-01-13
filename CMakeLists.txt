@@ -111,7 +111,7 @@ include_directories(
 set(THIRD_PARTY_LIBS
     ${OpenCV_LIBS}
     ${catkin_LIBS}
-  	MvCameraControl
+  	#MvCameraControl
 )
 
 ################## dependencies ################

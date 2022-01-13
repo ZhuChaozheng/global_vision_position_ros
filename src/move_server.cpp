@@ -3,9 +3,7 @@
 #include <nav_msgs/Odometry.h>
 #include <stdio.h>
 #include <tf/transform_listener.h>
-
 #include <iostream>
-
 #include "car.h"
 #include "global_vision_position/MoveAction.h"
 #include "ros/ros.h"
@@ -19,6 +17,9 @@ float *pos_x_array = new float[boid_num];
 float *pos_y_array = new float[boid_num];
 float *pos_theta_array = new float[boid_num];
 bool *flag_array = new bool[boid_num];
+/*
+ * controller params
+ */
 bool modi_flag = true;
 double _linear_velocity = 0.15;
 double _ratio = 0.8;  // 误差比例
@@ -47,18 +48,10 @@ vector<ros::Publisher> vel_pub_set_;
 /*
  * call back function
  */
-void robotOdomCallback(const nav_msgs::OdometryConstPtr &locator, int marker) {
+void robotOdomCallback(const nav_msgs::OdometryConstPtr &locator, 
+        int marker) {
   int k = marker;
   nav_msgs::Odometry robotOdometryMsg = *locator;
-
-  // if (k == 1) {
-  //   ROS_INFO("marker: %d, robot Position: %f, %f", k,
-  //            robotOdometryMsg.pose.pose.position.x,
-  //            robotOdometryMsg.pose.pose.position.y);
-  //   ROS_INFO("marker: %d, robot Heading: theta:%f", k,
-  //            (tf::getYaw(robotOdometryMsg.pose.pose.orientation)));
-  // }
-
   // current pose, x, y, theta
   pos_x_array[k] = robotOdometryMsg.pose.pose.position.x;
   pos_y_array[k] = robotOdometryMsg.pose.pose.position.y;
@@ -81,58 +74,16 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
 
   ros::Rate r(10);
 
-  /*
-   *                        _oo0oo_
-   *                       o8888888o
-   *                       88" . "88
-   *                       (| -_- |)
-   *                       0\  =  /0
-   *                     ___/`---'\___
-   *                   .' \\|     |// '.
-   *                  / \\|||  :  |||// \
-   *                 / _||||| -:- |||||- \
-   *                |   | \\\  - /// |   |
-   *                | \_|  ''\---/''  |_/ |
-   *                \  .-\__  '-'  ___/-. /
-   *              ___'. .'  /--.--\  `. .'___
-   *           ."" '<  `.___\_<|>_/___.' >' "".
-   *          | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-   *          \  \ `_.   \_ __\ /__ _/   .-` /  /
-   *      =====`-.____`.___ \_____/___.-`___.-'=====
-   *                        `=---='
-   *
-   *
-   *      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   *
-   *            佛祖保佑       永不宕机     永无BUG
-   */
-
   while (ros::ok()) {
     int i = 0;
     for (auto vel_pub = vel_pub_set_.begin(); vel_pub != vel_pub_set_.end();) {
-      // tf::Vector3 v1(pos_x_array[i], pos_y_array[i], 0);
-      // tf::Vector3 v2(car_target_pose.x,
-      //         car_target_pose.y + 0.5 * i, 0);
-
-      // double angle_to_goal = tf::tfAngle(v1, v2);
 
       double angle_to_goal =
           convert_pi(atan2((car_target_pose.y + 0.5 * i) - pos_y_array[i],
                            car_target_pose.x - pos_x_array[i]));
 
       double move_orientation = (angle_to_goal - pos_theta_array[i]);
-      // 1 is the parameter, follow the specific car preference
-      // 安全距离
-      // vel_msgs.angular.z = -1.0 * (angle_to_goal -
-      //         pos_theta_array[i]);
-
-      // if (i == 1) {
-      //   ROS_INFO("marker = %d, angle_to_goal = %f, current_angle = %f", i,
-      //            angle_to_goal, pos_theta_array[i]);
-      //   ROS_INFO("linear.x  = %f, angular.z = %f", vel_msgs.linear.x,
-      //            vel_msgs.angular.z);
-      // }
-
+     
       double dist =
           sqrt(pow(car_target_pose.x - pos_x_array[i], 2) +
                pow((car_target_pose.y + 0.5 * i) - pos_y_array[i], 2));
