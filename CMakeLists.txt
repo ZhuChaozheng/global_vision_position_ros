@@ -18,7 +18,7 @@ include_directories( "/usr/include/eigen3" )
 #set(OpenCV_DIR "/home/nvidia/Downloads/opencv-3.1.0/build")
 include_directories("/opt/MVS/include")
 link_directories("/opt/MVS/lib/64")
-link_directories("/usr/lib")
+link_directories("./libs")
 link_libraries(pthread)
 
 ## Find catkin macros and libraries

@@ -12,10 +12,10 @@ add_dependencies(odometry_pub ${${PROJECT_NAME}_EXPORTED_TARGETS}
 	${catkin_EXPORTED_TARGETS})
 target_link_libraries(odometry_pub GlobalVisionLibrary)
 
-#add_executable(planning planning.cc)
-#add_dependencies(planning ${${PROJECT_NAME}_EXPORTED_TARGETS}
-#	${catkin_EXPORTED_TARGETS})
-#	target_link_libraries(planning GlobalVisionLibrary boid_model)
+add_executable(planning planning.cc)
+add_dependencies(planning ${${PROJECT_NAME}_EXPORTED_TARGETS}
+	${catkin_EXPORTED_TARGETS})
+target_link_libraries(planning GlobalVisionLibrary boid_model)
 add_executable(tcp_driver_node tcp_driver_node.cc)
 add_dependencies(tcp_driver_node ${${PROJECT_NAME}_EXPORTED_TARGETS}
 	${catkin_EXPORTED_TARGETS})

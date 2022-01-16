@@ -1,13 +1,12 @@
 #ifndef BOID_MODEL_H 
 #define BOID_MODEL_H                              
-
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>
 #include <vector>
 #include <cstdio>
 #include <iostream>
-#include<stdio.h>
+#include <stdio.h>
 typedef struct 
 {
     float x;
@@ -24,10 +23,13 @@ PVector vec_limit(PVector vec, float scale);
 
 PVector vec_normalize(PVector vec);
 
+PVector vec_norm(PVector vec1, PVector vec2);
+
 float vec_mag(PVector vec);
 
 float vec_dist(PVector vec1, PVector vec2);
 
+float vec_dot(PVector vec1, PVector vec2);
 
 
 float Uniform_Rand(float a, float b);
@@ -58,10 +60,23 @@ class Boid {
         bool IsLeader;          // Leader yes or no
         float border_x;         // border x
         float border_y;         // border y
+        float border_x_low;     // border left x
+        float border_x_high;    // border right x
+        float border_y_low;     // border left y
+        float border_y_high;    // border right y
         float sep_dist;         // separate distance
         float coh_dist;         // cohesion distance
         float avoid_obs_dist;   // obstacle avoidance distance
         float avoid_border_dist;// border avoid distance
+        float sep_weight;       // seperation weight
+        float ali_weight;       // alignment weight
+        float coh_weight;       // cohesion weight
+        float nav_weight;       // navigation weight
+        float border_weight;    // border weight
+        float obstacle_weight;  // obstacle weight
+
+        std::vector<PVector> waypoints;
+        int waypt_id;
 
         Boid(float, float, int, float, float);
 
@@ -93,6 +108,10 @@ class Boid {
 
         PVector get_pos(void);
 
+        void add_waypoints(int, float*, float*);
+
+        void set_waypoint(void);
+
         void set_leader(int);
 
 };
@@ -107,6 +126,8 @@ class Flock
         void addBoid(Boid b);
         void addObstacle(Obstacle ob);
         std::vector<PVector> getBoidState(void);
+        int get_wp_id(void);
+        void evaluate(float*);
 };
 
 
@@ -149,6 +170,24 @@ extern "C"{
             int obstacle_num, float* ob_pos_x, 
             float* ob_pos_y, float* vel_x, float* vel_y,
             float* vel_cmd, float* theta_cmd);
+
+    void getFlockVelCmdBorderDef(int boids_num, float border_x_low, float border_x_high, 
+        float border_y_low, float border_y_high, float* weight_coeff, 
+        float sep_dist, float coh_dist, float avoid_obs_dist, float avoid_border_dist,
+        float* pos_x, float* pos_y, 
+        float* tar_pos_x, float* tar_pos_y, float* tar_vel_x, float* tar_vel_y,
+        int obstacle_num, float* ob_pos_x, 
+        float* ob_pos_y, float* vel_x, float* vel_y,
+        float* vel_cmd, float* theta_cmd);
+
+    void getFlockVelCmd4PathPlanning(int boids_num, float border_x_low, float border_x_high, 
+        float border_y_low, float border_y_high, float* weight_coeff, 
+        float sep_dist, float coh_dist, float avoid_obs_dist, float avoid_border_dist,
+        int waypoint_num, float* wp_x, float* wp_y,
+        float* pos_x, float* pos_y, 
+        int obstacle_num, float* ob_pos_x, 
+        float* ob_pos_y, float* vel_x, float* vel_y,
+        float* vel_cmd, float* theta_cmd, float* eva_scores, int* wp_ids, int* next_wp_ids);
 }
 #endif
 #endif
