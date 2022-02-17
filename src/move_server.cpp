@@ -76,17 +76,17 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
   ros::Rate r(10);
 
   while (ros::ok()) {
-    int i = 0;
+    int i = 1;
     for (auto vel_pub = vel_pub_set_.begin(); vel_pub != vel_pub_set_.end();) {
       double angle_to_goal =
-          convert_pi(atan2((car_target_pose.y + 0.5 * i) - pos_y_array[i],
+          convert_pi(atan2((car_target_pose.y + 0.5 * (i - 1)) - pos_y_array[i],
                            car_target_pose.x - pos_x_array[i]));
 
       double move_orientation = (angle_to_goal - pos_theta_array[i]);
 
       double dist =
           sqrt(pow(car_target_pose.x - pos_x_array[i], 2) +
-               pow((car_target_pose.y + 0.5 * i) - pos_y_array[i], 2));
+               pow((car_target_pose.y + 0.5 * (i - 1)) - pos_y_array[i], 2));
       // 0.125 is the parameter, follow the specific car preference
       // vel_msgs.linear.x = 0.15 * look_ahead_distance;
       vel_msgs.linear.x = 0;
@@ -98,7 +98,7 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
       as->publishFeedback(feedback);
       if (dist > ld) {
         double radius = -0.5 * (ld / sin(move_orientation));
-        double linear_velocity = (-1) * _linear_velocity;
+        double linear_velocity = _linear_velocity;
         double angular_velocity = L / radius;
         vel_msgs.linear.x = linear_velocity;
         vel_msgs.angular.z = angular_velocity;
@@ -113,7 +113,7 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
     }
     // all break flag is 0
     bool flag = false;
-    for (int j = 0; j < boid_num; j++) flag = flag | flag_array[j];
+    for (int j = 1; j < boid_num; j++) flag = flag | flag_array[j];
     if (!flag) break;
     r.sleep();
   }
@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
   // create ros node handle
   ros::NodeHandle nh;
   vector<ros::Subscriber> odom_sub_set_;
-  for (int i = 0; i < boid_num; i++) {
+  for (int i = 1; i < boid_num; i++) {
     string front_str = "/robot_";
     string end_str = "/pose";
     stringstream ss;
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
   }
   ros::Publisher vel_pub_;
 
-  for (int i = 0; i < boid_num; i++) {
+  for (int i = 1; i < boid_num; i++) {
     string front_str = "/robot_";
     string end_str = "/cmd_vel";
     stringstream ss;
