@@ -98,7 +98,7 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
       as->publishFeedback(feedback);
       if (dist > ld) {
         double radius = -0.5 * (ld / sin(move_orientation));
-        double linear_velocity = _linear_velocity;
+        double linear_velocity = (-1) * _linear_velocity;
         double angular_velocity = L / radius;
         vel_msgs.linear.x = linear_velocity;
         vel_msgs.angular.z = angular_velocity;
