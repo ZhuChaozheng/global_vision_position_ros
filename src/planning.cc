@@ -88,10 +88,9 @@ void *sub_spin(void *args) {
   ros::NodeHandle nh;
   vector<ros::Subscriber> odom_sub_set_;
   for (int i = 0; i <= 2; i++) {
-    string front_str = "robot_";
+    string front_str = "/robot_";
     string end_str = "/pose";
     stringstream ss;
-    // construct topic '/marker1/cmd_vel'
     ss << front_str << i << end_str;
     string topic = ss.str();
     ros::Subscriber odom_sub_ = nh.subscribe<nav_msgs::Odometry>(
@@ -114,12 +113,12 @@ int main(int argc, char **argv) {
   int *wp_ids, *next_wp_ids;
   float *weight_coeff;
   float *eva_scores;
-  wp_ids = (int*)malloc(boid_num*sizeof(int));
-  next_wp_ids = (int*)malloc(boid_num*sizeof(int)); 
-  weight_coeff=(float*)malloc(7*sizeof(float)); 
-  eva_scores=(float*)malloc(2*sizeof(float)); 
+  wp_ids = (int *)malloc(boid_num * sizeof(int));
+  next_wp_ids = (int *)malloc(boid_num * sizeof(int));
+  weight_coeff = (float *)malloc(7 * sizeof(float));
+  eva_scores = (float *)malloc(2 * sizeof(float));
 
-  //weight setting 
+  // weight setting
   weight_coeff[0] = 2.0;
   weight_coeff[1] = 1.5;
   weight_coeff[2] = 1.0;
@@ -172,7 +171,7 @@ int main(int argc, char **argv) {
   ros::Publisher vel_pub_;
   vector<ros::Publisher> vel_pub_set_;
   for (int i = 0; i < boid_num; i++) {
-    string front_str = "robot_";
+    string front_str = "/robot_";
     string end_str = "/cmd_vel";
     stringstream ss;
     // construct topic '/marker1/cmd_vel'
@@ -254,19 +253,17 @@ int main(int argc, char **argv) {
 
     // !!!!!!!!!!!!!!! record pos_x_array pos_y_array vel_x_matrix vel_y_matrix
     // current_angle out_theta_cmd twist.linear.x twist.angular.z
-    getFlockVelCmd4PathPlanning(boid_num, border_x_low, border_x_high, 
-        border_y_low, border_y_high,
-        weight_coeff, sep_dist, coh_dist,  avoid_obs_dist, avoid_border_dist,
-        waypoint_num, wp_x, wp_y,
-        pos_x_array, pos_y_array, 
-        ob_num, ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array,
-        out_cmd_vel, out_theta_cmd, eva_scores, wp_ids, next_wp_ids);
+    getFlockVelCmd4PathPlanning(
+        boid_num, border_x_low, border_x_high, border_y_low, border_y_high,
+        weight_coeff, sep_dist, coh_dist, avoid_obs_dist, avoid_border_dist,
+        waypoint_num, wp_x, wp_y, pos_x_array, pos_y_array, ob_num,
+        ob_pos_x_array, ob_pos_y_array, vel_x_array, vel_y_array, out_cmd_vel,
+        out_theta_cmd, eva_scores, wp_ids, next_wp_ids);
 
     // copy next_wp_ids to wp_ids
-    int i=0;
-    for (i = 0; i < boid_num; i++) 
-    {
-        wp_ids[i] = next_wp_ids[i];
+    int i = 0;
+    for (i = 0; i < boid_num; i++) {
+      wp_ids[i] = next_wp_ids[i];
     }
 
     std::cout << "after wp_id = " << wp_id << std::endl;
@@ -302,20 +299,18 @@ int main(int argc, char **argv) {
       if (angular_speed < -1.0) {
         angular_speed = -1.0;
       }
-      printf("ctrl_vel and angle:[%f,%f]\n", out_cmd_vel[i],
-             angular_speed);
+      printf("ctrl_vel and angle:[%f,%f]\n", out_cmd_vel[i], angular_speed);
 
       // let car move first
       if (index <= 1) {
-          twist.linear.x = 0.2;
-          twist.linear.y = 0.0;
-          twist.angular.z = 0.0;
+        twist.linear.x = 0.2;
+        twist.linear.y = 0.0;
+        twist.angular.z = 0.0;
       } else  // swarm control
       {
-   
-          twist.linear.x = out_cmd_vel[i];
-          twist.linear.y = 0.0;
-          twist.angular.z = angular_speed;
+        twist.linear.x = out_cmd_vel[i];
+        twist.linear.y = 0.0;
+        twist.angular.z = angular_speed;
       }
 
       (*vel_pub).publish(twist);
@@ -338,10 +333,9 @@ int main(int argc, char **argv) {
   free(eva_scores);
   free(wp_ids);
   free(next_wp_ids);
-  
+
   delete out_cmd_vel;
   delete out_theta_cmd;
-
 
   return 0;
 }

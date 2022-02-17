@@ -3,7 +3,9 @@
 #include <nav_msgs/Odometry.h>
 #include <stdio.h>
 #include <tf/transform_listener.h>
+
 #include <iostream>
+
 #include "car.h"
 #include "global_vision_position/MoveAction.h"
 #include "ros/ros.h"
@@ -48,8 +50,7 @@ vector<ros::Publisher> vel_pub_set_;
 /*
  * call back function
  */
-void robotOdomCallback(const nav_msgs::OdometryConstPtr &locator, 
-        int marker) {
+void robotOdomCallback(const nav_msgs::OdometryConstPtr &locator, int marker) {
   int k = marker;
   nav_msgs::Odometry robotOdometryMsg = *locator;
   // current pose, x, y, theta
@@ -77,13 +78,12 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
   while (ros::ok()) {
     int i = 0;
     for (auto vel_pub = vel_pub_set_.begin(); vel_pub != vel_pub_set_.end();) {
-
       double angle_to_goal =
           convert_pi(atan2((car_target_pose.y + 0.5 * i) - pos_y_array[i],
                            car_target_pose.x - pos_x_array[i]));
 
       double move_orientation = (angle_to_goal - pos_theta_array[i]);
-     
+
       double dist =
           sqrt(pow(car_target_pose.x - pos_x_array[i], 2) +
                pow((car_target_pose.y + 0.5 * i) - pos_y_array[i], 2));
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   vector<ros::Subscriber> odom_sub_set_;
   for (int i = 0; i < boid_num; i++) {
-    string front_str = "robot_";
+    string front_str = "/robot_";
     string end_str = "/pose";
     stringstream ss;
     // construct topic '/marker1/cmd_vel'
@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
   ros::Publisher vel_pub_;
 
   for (int i = 0; i < boid_num; i++) {
-    string front_str = "robot_";
+    string front_str = "/robot_";
     string end_str = "/cmd_vel";
     stringstream ss;
     // construct topic '/marker1/cmd_vel'
