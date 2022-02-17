@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     vector<ros::Subscriber> cmd_vel_set_;
     for (int i = 0; i <= 9; i ++)
     {
-        string front_str = "/marker";
+        string front_str = "robot_";
         string end_str = "/cmd_vel";
         stringstream ss;
         ss << front_str << i << end_str;

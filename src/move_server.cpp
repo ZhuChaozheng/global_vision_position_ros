@@ -141,10 +141,11 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   vector<ros::Subscriber> odom_sub_set_;
   for (int i = 0; i < boid_num; i++) {
-    string front_str = "/odom_";
+    string front_str = "robot_";
+    string end_str = "/pose";
     stringstream ss;
     // construct topic '/marker1/cmd_vel'
-    ss << front_str << i;
+    ss << front_str << i << end_str;
     string topic = ss.str();
     ros::Subscriber odom_sub_ = nh.subscribe<nav_msgs::Odometry>(
         topic, 1, boost::bind(&robotOdomCallback, _1, i));
@@ -154,7 +155,7 @@ int main(int argc, char **argv) {
   ros::Publisher vel_pub_;
 
   for (int i = 0; i < boid_num; i++) {
-    string front_str = "/marker";
+    string front_str = "robot_";
     string end_str = "/cmd_vel";
     stringstream ss;
     // construct topic '/marker1/cmd_vel'

@@ -92,9 +92,10 @@ int main(int argc, char** argv)
         
         int marker = (*iter).get_marker();
         cout << marker << endl;
-        string front_str = "/odom_";
+        string front_str = "robot_";
+        string end_str = "/pose";
         stringstream ss;
-        ss << front_str << marker;
+        ss << front_str << marker << end_str;
         string topic = ss.str();
         odom_publisher_ = n.advertise<nav_msgs::Odometry>(topic, 10);
         odom_publisher_set_.push_back(odom_publisher_);
@@ -169,16 +170,16 @@ int main(int argc, char** argv)
                     quaty = tag_0.getRotation().getY();
                     quatz = tag_0.getRotation().getZ();
                     quatw = tag_0.getRotation().getW();
-                    medianPoint = Point2f(tag_0.getOrigin().x(), 
-                            tag_0.getOrigin().y() );
+                    medianPoint = Point2f(tag_0.getOrigin().y(), 
+                            tag_0.getOrigin().x() );
                 }
                 if (marker == 1) {
             	    quatx = tag_1.getRotation().getX(); 
                     quaty = tag_1.getRotation().getY();
                     quatz = tag_1.getRotation().getZ();
                     quatw = tag_1.getRotation().getW();
-                    medianPoint = Point2f(tag_1.getOrigin().x(), 
-                            tag_1.getOrigin().y());
+                    medianPoint = Point2f(tag_1.getOrigin().y(), 
+                            tag_1.getOrigin().x());
                 }
                 // if (marker == 2) {
                 //     quatx = tag_2.getRotation().getX(); 
@@ -246,9 +247,10 @@ int main(int argc, char** argv)
                 for(auto odom_publisher = odom_publisher_set_.begin(); 
                     odom_publisher != odom_publisher_set_.end();)
                 {
-                    string front_str = "/odom_";
+                    string front_str = "robot_";
+                    string end_str = "/pose"
                     stringstream ss;
-                    ss << front_str << marker;
+                    ss << front_str << marker << end_str;
                     string topic = ss.str();
                     if ((*odom_publisher).getTopic() == topic)
                     {
