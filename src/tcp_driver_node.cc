@@ -49,9 +49,9 @@ void combine_buff(unsigned char buff[], int size, float linear_velocity,
  * then write the corresponding sockfd.
  */
 void vel_command_callback(const geometry_msgs::TwistConstPtr &msg, int marker) {
-  // std::cout << "Hello" << std::endl;
+  
   float linear_velocity = static_cast<float>(msg->linear.x);
-  float angular_velocity = static_cast<float>(msg->angular.z);
+  float angular_velocity = -1 * (static_cast<float>(msg->angular.z));
   unsigned char buff[11];
   buff[0] = 123;  // 7B
   buff[1] = 122;  // 7A
