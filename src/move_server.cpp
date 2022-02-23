@@ -97,9 +97,9 @@ void execute(const global_vision_position::MoveGoalConstPtr &goal, Server *as) {
       feedback.present_car_theta = pos_theta_array[i];
       as->publishFeedback(feedback);
       if (dist > ld) {
-        double radius = -0.5 * (ld / sin(move_orientation));
+        double radius = 0.5 * (ld / sin(move_orientation));
         double linear_velocity = _linear_velocity;
-        double angular_velocity = L / radius;
+        double angular_velocity = _linear_velocity / radius;
         vel_msgs.linear.x = linear_velocity;
         vel_msgs.angular.z = angular_velocity;
 
