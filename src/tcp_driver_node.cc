@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-02-17 11:12:19
- * @LastEditTime: 2022-02-17 11:21:42
- * @LastEditors: your name
+ * @LastEditTime: 2022-02-25 15:37:32
+ * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置:
  * https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /amov_ws/src/global_vision_position_ros/src/tcp_driver_node.cc
@@ -49,9 +49,8 @@ void combine_buff(unsigned char buff[], int size, float linear_velocity,
  * then write the corresponding sockfd.
  */
 void vel_command_callback(const geometry_msgs::TwistConstPtr &msg, int marker) {
-  
   float linear_velocity = static_cast<float>(msg->linear.x);
-  float angular_velocity = -1 * (static_cast<float>(msg->angular.z));
+  float angular_velocity = (static_cast<float>(msg->angular.z));
   unsigned char buff[11];
   buff[0] = 123;  // 7B
   buff[1] = 122;  // 7A

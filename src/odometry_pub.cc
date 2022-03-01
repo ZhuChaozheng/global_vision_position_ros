@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
           quaty = tag_1.getRotation().getY();
           quatz = tag_1.getRotation().getZ();
           quatw = tag_1.getRotation().getW();
-          medianPoint = Point2f(tag_1.getOrigin().y(), tag_1.getOrigin().x());
+          medianPoint = Point2f(tag_1.getOrigin().x(), tag_1.getOrigin().y());
         }
         // if (marker == 2) {
         //     quatx = tag_2.getRotation().getX();
