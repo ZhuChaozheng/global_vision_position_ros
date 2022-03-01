@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 
   // extend the new interface
   vector<ros::Subscriber> cmd_vel_set_;
-  for (int i = 0; i <= 9; i++) {
+  for (int i = 1; i <= 10; i++) {
     string front_str = "/robot_";
     string end_str = "/cmd_vel";
     stringstream ss;
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     std_msgs::String msg;
     std::stringstream ss;
-    for (int i = 0; i <= 9; i++)
+    for (int i = 1; i <= 10; i++)
       ss << car_[i].connfd 
          << " " << car_[i].velocity 
          << " " << car_[i].angular_velocity 
