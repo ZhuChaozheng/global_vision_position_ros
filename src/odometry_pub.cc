@@ -43,7 +43,7 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg) {
   str = const_cast<char*>(msg->data.c_str());
   char* pch;
   pch = strtok(str, " ");  // match space
-  float float_array[70];
+  float float_array[80];
   float pch_f;
   int i = 0;
   // remove space and put the valid data in data array
@@ -57,8 +57,8 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg) {
   for (auto iter = car_set.begin(); iter != car_set.end();) {
     int marker = (*iter).get_marker();
     // see the protocol
-    int velocity_id = marker * 7 + 1;
-    int angular_velocity_id = marker * 7 + 2;
+    int velocity_id = marker * 8 + 1;
+    int angular_velocity_id = marker * 8 + 7; // gyro_z
     (*iter).set_velocity(float_array[velocity_id]);
     (*iter).set_angular_velocity(float_array[angular_velocity_id]);
     iter++;

@@ -97,7 +97,8 @@ int main(int argc, char **argv) {
          << " " << car_[i].left_wheel_velocity
          << " " << car_[i].right_wheel_velocity 
          << " " << car_[i].acc_x
-         << " " << car_[i].acc_y;
+         << " " << car_[i].acc_y
+         << " " << car_[i].gyro_z;
     msg.data = ss.str();
     // ROS_INFO("%s", msg.data.c_str());
     chatter_pub.publish(msg);

@@ -47,10 +47,10 @@ void update_status(int connfd, unsigned char buff[], int size) {
   if (temp56 > 32768) temp56 = temp56 - 65525;
   car_[id].velocity = (float)(temp56 / 1000.0);
   // printf("temp %d \n", temp);
-  // angular velocity comes from gyro
-  int temp2122 = (buff[21] << 8) + buff[22];
-  if (temp2122 > 32768) temp2122 = temp2122 - 65525;
-  car_[id].angular_velocity = (float)(temp2122 / 3753.0);
+  // 9 10 angular_velocity by calculation
+  int temp910 = (buff[9] << 8) + buff[10];
+  if (temp910 > 32768) temp910 = temp910 - 65525;
+  car_[id].angular_velocity = (float)(temp910 / 1000.0);
   // printf("angular_velocity %f \n", car_[id].angular_velocity);
   // 25-26 left wheel velocity
   int temp2526 = (buff[25] << 8) + buff[26];
@@ -68,6 +68,10 @@ void update_status(int connfd, unsigned char buff[], int size) {
   int temp1314 = (buff[13] << 8) + buff[14];
   if (temp1314 > 32768) temp1314 = temp1314 - 65525;
   car_[id].acc_y = (float)(temp1314 / 1672.0);
+  // 21 22 gyro_z
+  int temp2122 = (buff[21] << 8) + buff[22];
+  if (temp2122 > 32768) temp2122 = temp2122 - 65525;
+  car_[id].gyro_z = (float)(temp2122 / 3753.0);
 }
 
 // void *write_test(void *arg)

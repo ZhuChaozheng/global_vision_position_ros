@@ -23,6 +23,7 @@ typedef struct _car
     float right_wheel_velocity;
     float acc_x;
     float acc_y;
+    float gyro_z;
 }car;
 
 car car_[10];
