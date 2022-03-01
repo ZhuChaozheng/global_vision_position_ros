@@ -43,21 +43,22 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg) {
   str = const_cast<char*>(msg->data.c_str());
   char* pch;
   pch = strtok(str, " ");  // match space
-  float float_array[50];
+  float float_array[70];
   float pch_f;
   int i = 0;
+  // remove space and put the valid data in data array
   while (pch != NULL) {
-    // printf ("%s\n", pch);
     pch_f = atof(pch);
     float_array[i] = pch_f;
     pch = strtok(NULL, " ");
     i++;
   }
+  // put the corresponding data into the specific car
   for (auto iter = car_set.begin(); iter != car_set.end();) {
     int marker = (*iter).get_marker();
     // see the protocol
-    int velocity_id = marker * 5 + 1;
-    int angular_velocity_id = marker * 5 + 2;
+    int velocity_id = marker * 7 + 1;
+    int angular_velocity_id = marker * 7 + 2;
     (*iter).set_velocity(float_array[velocity_id]);
     (*iter).set_angular_velocity(float_array[angular_velocity_id]);
     iter++;

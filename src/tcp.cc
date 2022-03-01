@@ -60,6 +60,14 @@ void update_status(int connfd, unsigned char buff[], int size) {
   int temp2728 = (buff[27] << 8) + buff[28];
   if (temp2728 > 32768) temp2728 = temp2728 - 65525;
   car_[id].right_wheel_velocity = (float)(temp2728 / 1000.0);
+  // 11 12 acc_x
+  int temp1112 = (buff[11] << 8) + buff[12];
+  if (temp1112 > 32768) temp1112 = temp1112 - 65525;
+  car_[id].acc_x = (float)(temp1112 / 1672.0);
+  // 13 14 acc_y
+  int temp1314 = (buff[13] << 8) + buff[14];
+  if (temp1314 > 32768) temp1314 = temp1314 - 65525;
+  car_[id].acc_y = (float)(temp1314 / 1672.0);
 }
 
 // void *write_test(void *arg)
