@@ -195,11 +195,27 @@ int main(int argc, char** argv) {
         geometry_msgs::Quaternion odom_quat =
             tf::createQuaternionMsgFromYaw(yaw);
 
+        
+        string front_str = "/robot_";
+        string end_str_odom = "/odom";
+        stringstream ss;
+        // construct tf '/robot_1/odom'
+        ss << front_str << marker << end_str_odom;
+        string tf_odom = ss.str();
+        // /robot_1/base_link
+        string end_str_base = "/base_link";
+        ss << front_str << marker << end_str_base;
+        string tf_base = ss.str();
+        // publish the relationship between /map and /robot_1/odom, static
+
+        // publish the relationship between /map and /hik_camera, static
+
+
         // first, we'll publish the transform over tf
         geometry_msgs::TransformStamped odom_trans;
         odom_trans.header.stamp = currentTime;
-        odom_trans.header.frame_id = "odom";
-        odom_trans.child_frame_id = "base_link";
+        odom_trans.header.frame_id = tf_odom;
+        odom_trans.child_frame_id = tf_base;
 
         odom_trans.transform.translation.x = medianPoint.x;
         odom_trans.transform.translation.y = medianPoint.y;
@@ -211,7 +227,7 @@ int main(int argc, char** argv) {
         // next, we'll publish the odometry message over ROS
         nav_msgs::Odometry odom;
         odom.header.stamp = currentTime;
-        odom.header.frame_id = "odom";
+        odom.header.frame_id = tf_odom;
 
         // set the position
         odom.pose.pose.position.x = medianPoint.x;
@@ -220,7 +236,7 @@ int main(int argc, char** argv) {
         odom.pose.pose.orientation = odom_quat;
 
         // set the velocity
-        odom.child_frame_id = "base_link";
+        odom.child_frame_id = tf_base;
         odom.twist.twist.linear.x = velocity;
         odom.twist.twist.linear.y = 0;
         odom.twist.twist.angular.z = angular_velocity;

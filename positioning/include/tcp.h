@@ -26,7 +26,7 @@ typedef struct _car
     float gyro_z;
 }car;
 
-car car_[10];
+car car_[11];
 
 void read_func(int sockfd);
 

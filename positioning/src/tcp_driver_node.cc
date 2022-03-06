@@ -27,7 +27,7 @@
 #include "std_msgs/String.h"
 #include "tcp.h"
 
-extern car car_[10];
+extern car car_[11];
 
 void *server_thread(void *arg) {
   create_server_and_update_data();  // update struct car[10]

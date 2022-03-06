@@ -1,0 +1,8 @@
+prefix=/home/jason/catkin_ws/src/waypoint_loader/build/devel
+
+Name: waypoint_loader
+Description: Description of waypoint_loader
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/jason/catkin_ws/src/waypoint_loader/build/devel/lib 
+Requires: 
