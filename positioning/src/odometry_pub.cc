@@ -58,7 +58,7 @@ void comm_call_back(const std_msgs::String::ConstPtr& msg) {
     int marker = (*iter).get_marker();
     // see the protocol
     int velocity_id = marker * 8 + 1;
-    int angular_velocity_id = marker * 8 + 7; // gyro_z
+    int angular_velocity_id = marker * 8 + 7;  // gyro_z
     (*iter).set_velocity(float_array[velocity_id]);
     (*iter).set_angular_velocity(float_array[angular_velocity_id]);
     iter++;
@@ -195,21 +195,23 @@ int main(int argc, char** argv) {
         geometry_msgs::Quaternion odom_quat =
             tf::createQuaternionMsgFromYaw(yaw);
 
-        
         string front_str = "/robot_";
         string end_str_odom = "/odom";
         stringstream ss;
         // construct tf '/robot_1/odom'
         ss << front_str << marker << end_str_odom;
         string tf_odom = ss.str();
+        ROS_INFO("%s", tf_odom.c_str());
         // /robot_1/base_link
+        stringstream sss;
         string end_str_base = "/base_link";
-        ss << front_str << marker << end_str_base;
-        string tf_base = ss.str();
+        sss << front_str << marker << end_str_base;
+        string tf_base = sss.str();
+        ROS_INFO("%s", tf_base.c_str());
         // publish the relationship between /map and /robot_1/odom, static
-
+        odom_broadcaster.sendTransform(tf::StampedTransform(
+            lastTransfrom_map_in_odom, ros::Time::now(), "map", tf_odom));
         // publish the relationship between /map and /hik_camera, static
-
 
         // first, we'll publish the transform over tf
         geometry_msgs::TransformStamped odom_trans;
@@ -246,10 +248,10 @@ int main(int argc, char** argv) {
              odom_publisher != odom_publisher_set_.end();) {
           string front_str = "/robot_";
           string end_str = "/pose";
-          stringstream ss;
+          stringstream ssss;
           // construct topic '/marker1/cmd_vel'
-          ss << front_str << marker << end_str;
-          string topic = ss.str();
+          ssss << front_str << marker << end_str;
+          string topic = ssss.str();
           if ((*odom_publisher).getTopic() == topic) {
             (*odom_publisher).publish(odom);
             break;

@@ -2,6 +2,6 @@
 <launch>
     <node pkg="waypoint_loader" type="waypoint_loader.py" name="waypoint_loader" output="screen">
         <param name="path" value="$(find waypoint_loader)/waypoints/waypoints.csv" />
-        <param name="velocity" value="80" />
+        <param name="velocity" value="0.2" />
     </node>
 </launch>

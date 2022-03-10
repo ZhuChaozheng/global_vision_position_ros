@@ -47,7 +47,7 @@ class WaypointLoader(object):
         waypoints = []
         base_path = Path()
         #base_path.header.frame_id = 'world'
-        base_path.header.frame_id = 'pioneer/map'
+        base_path.header.frame_id = 'map'
         with open(fname) as wfile:
             reader = csv.DictReader(wfile, CSV_HEADER)
             for wp in reader:
@@ -89,7 +89,7 @@ class WaypointLoader(object):
 
     def publish(self, waypoints, base_path):
         lane = Lane()
-        lane.header.frame_id = '/world'
+        lane.header.frame_id = 'map'
         lane.header.stamp = rospy.Time(0)
         lane.waypoints = waypoints
         self.pub.publish(lane)
