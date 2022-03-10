@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
   tf::TransformBroadcaster odom_broadcaster;
   tf::Transform lastTransfrom_map_in_odom;
   lastTransfrom_map_in_odom =
-      tf::Transform(tf::createQuaternionFromRPY(0, 0, 0), tf::Vector3(0, 0, 0));
+      tf::Transform(tf::createQuaternionFromRPY(3.14, 0, 0), tf::Vector3(0, 0, 0));
   ros::Duration transform_tolerance_;
   transform_tolerance_.fromSec(0.1);
   while (n.ok()) {
@@ -201,17 +201,24 @@ int main(int argc, char** argv) {
         // construct tf '/robot_1/odom'
         ss << front_str << marker << end_str_odom;
         string tf_odom = ss.str();
-        ROS_INFO("%s", tf_odom.c_str());
+        
         // /robot_1/base_link
         stringstream sss;
         string end_str_base = "/base_link";
         sss << front_str << marker << end_str_base;
         string tf_base = sss.str();
-        ROS_INFO("%s", tf_base.c_str());
         // publish the relationship between /map and /robot_1/odom, static
         odom_broadcaster.sendTransform(tf::StampedTransform(
             lastTransfrom_map_in_odom, ros::Time::now(), "map", tf_odom));
         // publish the relationship between /map and /hik_camera, static
+        tf::TransformBroadcaster map_hik;
+        tf::Transform lastTransfrom_map_in_hik;
+        lastTransfrom_map_in_hik =
+            tf::Transform(tf::createQuaternionFromRPY(0, 0, 0), 
+            tf::Vector3(1.5, 1.5, 2.5));
+        odom_broadcaster.sendTransform(tf::StampedTransform(
+            lastTransfrom_map_in_hik, ros::Time::now(), "map", "/hik_camera"));
+        
 
         // first, we'll publish the transform over tf
         geometry_msgs::TransformStamped odom_trans;
