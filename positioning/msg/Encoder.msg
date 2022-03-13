@@ -1,0 +1,2 @@
+float32 fr_speed_rpm
+float32 fl_speed_rpm

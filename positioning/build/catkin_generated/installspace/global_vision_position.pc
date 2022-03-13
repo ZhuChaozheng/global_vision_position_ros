@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: global_vision_position
+Description: Description of global_vision_position
+Version: 1.0.0
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib 
+Requires: geometry_msgs roscpp nav_msgs std_msgs message_runtime

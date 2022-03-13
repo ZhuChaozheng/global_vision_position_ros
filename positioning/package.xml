@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>global_vision_position</name>
+  <name>positioning</name>
   <version>1.0.0</version>
-  <description>The global_vision_position package</description>
+  <description>The positioning package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -57,6 +57,7 @@
   <build_depend>message_generation</build_depend>
   <build_depend>actionlib</build_depend>
   <build_depend>actionlib_msgs</build_depend>
+  <build_depend>rospy</build_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>opencv</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
@@ -65,11 +66,14 @@
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>opencv</exec_depend>
   <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>actionlib</exec_depend>
   <exec_depend>actionlib_msgs</exec_depend> 
+  <build_depend>Encoder</build_depend>
+  <exec_depend>Encoder</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

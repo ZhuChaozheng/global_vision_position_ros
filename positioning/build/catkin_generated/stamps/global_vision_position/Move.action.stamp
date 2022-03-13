@@ -1,0 +1,14 @@
+# Define the goal
+float64 car_target_x  # Specify car's　target position
+float64 car_target_y
+float64 car_target_theta
+---
+# Define the result
+float64 car_final_x
+float64 car_final_y
+float64 car_final_theta
+---
+# Define a feedback message
+float64 present_car_x
+float64 present_car_y
+float64 present_car_theta

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(global_vision_position)
+project(positioning)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11 -march=native -O3 -pthread)
@@ -30,6 +30,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
 #  opencv
   roscpp
+  rospy
   tf
   nav_msgs
   std_msgs
@@ -42,11 +43,15 @@ find_package(OpenCV REQUIRED)
 message(STATUS "version: ${OpenCV_VERSION}")
 
 ## Generate actions in the 'action' folder
- add_action_files(
-   FILES
-   Move.action
- )
- 
+add_action_files(
+  FILES
+  Move.action
+)
+
+add_message_files(
+  FILES
+  Encoder.msg
+)
 
 
 ## Generate added messages and services with any dependencies listed here
@@ -88,8 +93,10 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+  INCLUDE_DIRS include
   CATKIN_DEPENDS 
   geometry_msgs
+  rospy
   roscpp
   nav_msgs
   std_msgs
@@ -112,6 +119,11 @@ set(THIRD_PARTY_LIBS
     ${OpenCV_LIBS}
     ${catkin_LIBS}
   	#MvCameraControl
+)
+
+catkin_install_python(PROGRAMS
+    script/transfer.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ################## dependencies ################
