@@ -30,6 +30,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
 #  opencv
   roscpp
+  rospy
   tf
   nav_msgs
   std_msgs
@@ -47,6 +48,10 @@ message(STATUS "version: ${OpenCV_VERSION}")
    Move.action
  )
  
+  add_message_files(
+   FILES
+   Encoder.msg
+ )
 
 
 ## Generate added messages and services with any dependencies listed here
@@ -88,6 +93,7 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+  INCLUDE_DIRS include
   CATKIN_DEPENDS 
   geometry_msgs
   roscpp
@@ -112,6 +118,11 @@ set(THIRD_PARTY_LIBS
     ${OpenCV_LIBS}
     ${catkin_LIBS}
   	#MvCameraControl
+)
+
+catkin_install_python(PROGRAMS
+    script/transfer.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ################## dependencies ################
