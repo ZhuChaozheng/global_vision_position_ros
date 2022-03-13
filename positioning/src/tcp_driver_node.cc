@@ -91,11 +91,11 @@ int main(int argc, char **argv) {
     std_msgs::String msg;
     std::stringstream ss;
     for (int i = 1; i <= 10; i++)
-      ss << car_[i].connfd 
+      ss << car_[i].connfd // 0
          << " " << car_[i].velocity 
-         << " " << car_[i].angular_velocity 
+         << " " << car_[i].angular_velocity // 2
          << " " << car_[i].left_wheel_velocity
-         << " " << car_[i].right_wheel_velocity 
+         << " " << car_[i].right_wheel_velocity  // 4
          << " " << car_[i].acc_x
          << " " << car_[i].acc_y
          << " " << car_[i].gyro_z;
