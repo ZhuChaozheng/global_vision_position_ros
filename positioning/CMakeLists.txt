@@ -43,10 +43,9 @@ find_package(OpenCV REQUIRED)
 message(STATUS "version: ${OpenCV_VERSION}")
 
 ## Generate actions in the 'action' folder
-add_action_files(
-  FILES
-  Move.action
-)
+#add_action_files(
+#  FILES
+#)
 
 add_message_files(
   FILES

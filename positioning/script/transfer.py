@@ -32,7 +32,6 @@ def callback(data):
     car_data = data.data.split(" ")
 
 # 创建一个Publisher，发布名为/imu_data的topic，消息类型为laneline_publisher::laneline，队列长度10
-    #for i in range(11):
     i = 0
     stamp = rospy.get_rostime()
     imu_msg.header.stamp = stamp
