@@ -129,6 +129,16 @@ int main(int argc, char** argv) {
   int j = 0;                  // mean the speed and angular
   ros::Duration transform_tolerance_;
   transform_tolerance_.fromSec(0.1);
+  tf::TransformBroadcaster odom_broadcaster;
+  tf::Transform lastTransfrom_map_in_odom;
+  // (1, 0, 0, 0, -1, 0, 0, 0, -1)
+  lastTransfrom_map_in_odom = tf::Transform(
+      tf::Matrix3x3(1, 0, 0, 0, -1, 0, 0, 0, -1), tf::Vector3(0, 0, 0));
+  tf::TransformBroadcaster map_hik;
+  tf::Transform lastTransfrom_map_in_hik;
+  lastTransfrom_map_in_hik =
+      tf::Transform(tf::createQuaternionFromRPY(0, 0, 0), 
+      tf::Vector3(1.5, 1.5, 2.5));
   while (n.ok()) {
     // tag_0.child_frame_id_ = "tag_0";
     try {
@@ -204,20 +214,9 @@ int main(int argc, char** argv) {
         sss << front_str << marker << end_str_base;
         string tf_base = sss.str();
         // publish the relationship between /map and /robot_1/odom, static
-        tf::TransformBroadcaster odom_broadcaster;
-        tf::Transform lastTransfrom_map_in_odom;
-        // (1, 0, 0, 0, -1, 0, 0, 0, -1)
-        lastTransfrom_map_in_odom = tf::Transform(
-            tf::Matrix3x3(1, 0, 0, 0, -1, 0, 0, 0, -1), tf::Vector3(0, 0, 0));
-  
         odom_broadcaster.sendTransform(tf::StampedTransform(
             lastTransfrom_map_in_odom, ros::Time::now(), "map", tf_odom));
         // publish the relationship between /map and /hik_camera, static
-        tf::TransformBroadcaster map_hik;
-        tf::Transform lastTransfrom_map_in_hik;
-        lastTransfrom_map_in_hik =
-            tf::Transform(tf::createQuaternionFromRPY(0, 0, 0), 
-            tf::Vector3(1.5, 1.5, 2.5));
         odom_broadcaster.sendTransform(tf::StampedTransform(
             lastTransfrom_map_in_hik, ros::Time::now(), "map", "/hik_camera"));
         

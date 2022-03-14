@@ -234,7 +234,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom) {
       // frame)
       double yt = lookahead_.transform.translation.y;
       double ld_2 = ld_ * ld_;
-      cmd_vel_.angular.z = (-1) * std::min(2 * v_ / ld_2 * yt, w_max_);
+      cmd_vel_.angular.z = std::min(2 * v_ / ld_2 * yt, w_max_);
 
       // Compute desired Ackermann steering angle
       cmd_acker_.drive.steering_angle =

@@ -6,14 +6,15 @@
   <include file="$(find apriltag_ros)/launch/continuous_detection.launch">
   </include>
   <!-- publish odometry -->
-  <node pkg="global_vision_position" type="odometry_pub" respawn="false" name="odometry_pub" output="screen">
-    <rosparam file="$(find global_vision_position)/param/cache_area.yaml" command="load"/>
-    <rosparam file="$(find global_vision_position)/param/configure.yaml" command="load"/>
+  <node pkg="positioning" type="odometry_pub" respawn="false" name="odometry_pub" output="screen">
+    <rosparam file="$(find positioning)/param/cache_area.yaml" command="load"/>
+    <rosparam file="$(find positioning)/param/configure.yaml" command="load"/>
   </node>
-  <!-- execute control driver -->
-  <node pkg="global_vision_position" type="control_sub" respawn="false" name="control_sub" output="screen">
-  	<rosparam file="$(find global_vision_position)/param/configure.yaml" command="load"/>
-  </node> 
+  <!-- controller -->
+  <include file="$(find pure_pursuit)/launch/pure_pursuit.launch"></include>
+  <!-- waypoint loader -->
+  <include file="$(find waypoint_loader)/launch/waypoint_loader.launch"></include>
+  
   <!-- development interface -->
   <!--
   <node pkg="global_vision_position" type="planning" respawn="false" name="planning" output="screen">

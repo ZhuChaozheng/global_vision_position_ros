@@ -1,6 +1,6 @@
 <launch>
-  <node pkg="global_vision_position" type="odometry_pub" respawn="false" name="odometry_pub" output="screen">
-    <rosparam file="$(find global_vision_position)/param/cache_area.yaml" command="load"/>
-    <rosparam file="$(find global_vision_position)/param/configure.yaml" command="load"/>
+  <node pkg="positioning" type="odometry_pub" respawn="false" name="odometry_pub" output="screen">
+    <rosparam file="$(find positioning)/param/cache_area.yaml" command="load"/>
+    <rosparam file="$(find positioning)/param/configure.yaml" command="load"/>
   </node>
 </launch>
