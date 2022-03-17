@@ -4,7 +4,8 @@ lookahead_distance: 0.2
 max_linear_velocity: 0.2
 max_rotational_velocity: 1.5
 position_tolerance: 0.05
-map_frame_id: map
+#map_frame_id: map
+map_frame_id: robot_1/odom
 robot_frame_id: robot_1/base_link
 lookahead_frame_id: robot_1/lookahead
 

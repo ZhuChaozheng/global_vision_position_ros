@@ -133,12 +133,13 @@ int main(int argc, char** argv) {
   tf::Transform lastTransfrom_map_in_odom;
   // (1, 0, 0, 0, -1, 0, 0, 0, -1)
   lastTransfrom_map_in_odom = tf::Transform(
-      tf::Matrix3x3(1, 0, 0, 0, -1, 0, 0, 0, -1), tf::Vector3(0, 0, 0));
+      tf::Matrix3x3(1, 0, 0, 0, -1, 0, 0, 0, -1), 
+      tf::Vector3(0.5, 2, 4));
   tf::TransformBroadcaster map_hik;
   tf::Transform lastTransfrom_map_in_hik;
   lastTransfrom_map_in_hik =
       tf::Transform(tf::createQuaternionFromRPY(0, 0, 0), 
-      tf::Vector3(1.5, 1.5, 2.5));
+      tf::Vector3(0, 0, 0));
   while (n.ok()) {
     // tag_0.child_frame_id_ = "tag_0";
     try {
@@ -238,6 +239,7 @@ int main(int argc, char** argv) {
         nav_msgs::Odometry odom;
         odom.header.stamp = currentTime;
         odom.header.frame_id = tf_odom;
+        odom.child_frame_id = tf_base;
 
         // set the position
         odom.pose.pose.position.x = medianPoint.x;
@@ -246,7 +248,6 @@ int main(int argc, char** argv) {
         odom.pose.pose.orientation = odom_quat;
 
         // set the velocity
-        odom.child_frame_id = tf_base;
         odom.twist.twist.linear.x = velocity;
         odom.twist.twist.linear.y = 0;
         odom.twist.twist.angular.z = angular_velocity;
