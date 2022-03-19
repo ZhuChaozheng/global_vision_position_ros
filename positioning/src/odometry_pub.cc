@@ -121,115 +121,117 @@ int main(int argc, char** argv) {
   int j = 0;                  // mean the speed and angular
   ros::Duration transform_tolerance_;
   transform_tolerance_.fromSec(0.1);
-  
+
   tf::TransformBroadcaster base_broadcaster;
-  
+
   while (n.ok()) {
-    for (auto iter = car_set.begin(); iter != car_set.end();) {
-      int marker = (*iter).get_marker();
-      double quatx, quaty, quatz, quatw;
-      tf::Quaternion quat;
-      double roll, pitch, yaw;  // save roll pitch yaw
-      float angle;
-      Point2f medianPoint;
-      string front_str_tag = "/tag_";
-      ;
-      stringstream ss_tag;
-      // construct tf '/robot_1/odom'
-      ss_tag << front_str_tag << marker;
-      string tf_tag = ss_tag.str();
+    try {
+      for (auto iter = car_set.begin(); iter != car_set.end();) {
+        int marker = (*iter).get_marker();
+        double quatx, quaty, quatz, quatw;
+        tf::Quaternion quat;
+        double roll, pitch, yaw;  // save roll pitch yaw
+        float angle;
+        Point2f medianPoint;
+        string front_str_tag = "/tag_";
+        ;
+        stringstream ss_tag;
+        // construct tf '/robot_1/odom'
+        ss_tag << front_str_tag << marker;
+        string tf_tag = ss_tag.str();
 
-      string front_str = "/robot_";
-      // /robot_1/base_link
-      stringstream ss_base;
-      string end_str_base = "/base_link";
-      ss_base << front_str << marker << end_str_base;
-      string tf_base = ss_base.str();
-      
-      // base_broadcaster.sendTransform(tf::StampedTransform(
-      //     lastTransfrom_tag_in_base, ros::Time::now(), tf_tag, tf_base));
-      // publish the relationship between /tag_1 and /robot_1/base
-      geometry_msgs::TransformStamped tag_base_trans;
-      tag_base_trans.header.stamp = currentTime;
-      tag_base_trans.header.frame_id = tf_tag;
-      tag_base_trans.child_frame_id = tf_base;
-      tag_base_trans.transform.translation.x = 0;
-      tag_base_trans.transform.translation.y = 0;
-      tag_base_trans.transform.translation.z = 0;
-      tag_base_trans.transform.rotation.x = 1;
-      tag_base_trans.transform.rotation.y = 0;
-      tag_base_trans.transform.rotation.z = 0;
-      tag_base_trans.transform.rotation.w = 0;
-      // send the transform
-      base_broadcaster.sendTransform(tag_base_trans);
-
-      try {
-        car_listener.lookupTransform("map", tf_base, ros::Time(0), transform);
-      } catch (tf::TransformException ex) {
-        ROS_ERROR("%s", ex.what());
-        ros::Duration(1.0).sleep();
-      }
-      quatx = transform.getRotation().getX();
-      quaty = transform.getRotation().getY();
-      quatz = transform.getRotation().getZ();
-      quatw = transform.getRotation().getW();
-      medianPoint =
-          Point2f(transform.getOrigin().x(), transform.getOrigin().y());
-
-      quat = tf::Quaternion(quatx, quaty, quatz, quatw);
-      yaw = tf::getYaw(quat);
-
-      // float angle = tag_3.getRotation().getAngle();
-      // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
-      angle = convertDegree(yaw);
-      // update the states
-      (*iter).set_angle(angle);
-      (*iter).set_median_point(medianPoint);
-      float velocity = (*iter).get_velocity();
-      float angular_velocity = (*iter).get_angular_velocity();
-
-      geometry_msgs::Quaternion odom_quat = 
-          tf::createQuaternionMsgFromYaw(yaw);
-
-      // next, we'll publish the odometry message over ROS
-      nav_msgs::Odometry odom;
-      odom.header.stamp = currentTime;
-      odom.header.frame_id = "map";
-      odom.child_frame_id = tf_base;
-
-      // set the position
-      odom.pose.pose.position.x = medianPoint.x;
-      odom.pose.pose.position.y = medianPoint.y;
-      odom.pose.pose.position.z = 0.0;
-      odom.pose.pose.orientation = odom_quat;
-
-      // set the velocity
-      odom.twist.twist.linear.x = velocity;
-      odom.twist.twist.linear.y = 0;
-      odom.twist.twist.angular.z = angular_velocity;
-
-      // publish the message
-      for (auto odom_publisher = odom_publisher_set_.begin();
-           odom_publisher != odom_publisher_set_.end();) {
         string front_str = "/robot_";
-        string end_str = "/pose";
-        stringstream ssss;
-        // construct topic '/marker1/cmd_vel'
-        ssss << front_str << marker << end_str;
-        string topic = ssss.str();
-        if ((*odom_publisher).getTopic() == topic) {
-          (*odom_publisher).publish(odom);
-          break;
-        }
-        odom_publisher++;
-      }
-      iter++;
-    }
-    currentTime = ros::Time::now();
-    consumeTime = currentTime.toSec() - lastTime.toSec();
-    // cout << "odometry fps: " << 1/consumeTime << "Hz" << endl;
-    lastTime = currentTime;
+        // /robot_1/base_link
+        stringstream ss_base;
+        string end_str_base = "/base_link";
+        ss_base << front_str << marker << end_str_base;
+        string tf_base = ss_base.str();
 
+        // base_broadcaster.sendTransform(tf::StampedTransform(
+        //     lastTransfrom_tag_in_base, ros::Time::now(), tf_tag, tf_base));
+        // publish the relationship between /tag_1 and /robot_1/base
+        // geometry_msgs::TransformStamped tag_base_trans;
+        // tag_base_trans.header.stamp = currentTime;
+        // tag_base_trans.header.frame_id = tf_tag;
+        // tag_base_trans.child_frame_id = tf_base;
+        // tag_base_trans.transform.translation.x = 0;
+        // tag_base_trans.transform.translation.y = 0;
+        // tag_base_trans.transform.translation.z = 0;
+        // tag_base_trans.transform.rotation.x = 1;
+        // tag_base_trans.transform.rotation.y = 0;
+        // tag_base_trans.transform.rotation.z = 0;
+        // tag_base_trans.transform.rotation.w = 0;
+        // // send the transform
+        // base_broadcaster.sendTransform(tag_base_trans);
+        car_listener.waitForTransform("map", "robot_1/base_link", ros::Time(0),
+                                      ros::Duration(10.0));
+        car_listener.lookupTransform("map", "robot_1/base_link", ros::Time(0),
+                                     transform);
+        quatx = transform.getRotation().getX();
+        quaty = transform.getRotation().getY();
+        quatz = transform.getRotation().getZ();
+        quatw = transform.getRotation().getW();
+        medianPoint =
+            Point2f(transform.getOrigin().x(), transform.getOrigin().y());
+
+        quat = tf::Quaternion(quatx, quaty, quatz, quatw);
+        yaw = tf::getYaw(quat);
+
+        // float angle = tag_3.getRotation().getAngle();
+        // tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);//convert
+        angle = convertDegree(yaw);
+        // update the states
+        (*iter).set_angle(angle);
+        (*iter).set_median_point(medianPoint);
+        float velocity = (*iter).get_velocity();
+        float angular_velocity = (*iter).get_angular_velocity();
+
+        geometry_msgs::Quaternion odom_quat =
+            tf::createQuaternionMsgFromYaw(yaw);
+
+        // next, we'll publish the odometry message over ROS
+        nav_msgs::Odometry odom;
+        odom.header.stamp = currentTime;
+        odom.header.frame_id = "map";
+        odom.child_frame_id = tf_base;
+
+        // set the position
+        odom.pose.pose.position.x = medianPoint.x;
+        odom.pose.pose.position.y = medianPoint.y;
+        odom.pose.pose.position.z = 0.0;
+        odom.pose.pose.orientation = odom_quat;
+
+        // set the velocity
+        odom.twist.twist.linear.x = velocity;
+        odom.twist.twist.linear.y = 0;
+        odom.twist.twist.angular.z = angular_velocity;
+
+        // publish the message
+        for (auto odom_publisher = odom_publisher_set_.begin();
+             odom_publisher != odom_publisher_set_.end();) {
+          string front_str = "/robot_";
+          string end_str = "/pose";
+          stringstream ssss;
+          // construct topic '/marker1/cmd_vel'
+          ssss << front_str << marker << end_str;
+          string topic = ssss.str();
+          if ((*odom_publisher).getTopic() == topic) {
+            (*odom_publisher).publish(odom);
+            break;
+          }
+          odom_publisher++;
+        }
+        iter++;
+      }
+      currentTime = ros::Time::now();
+      consumeTime = currentTime.toSec() - lastTime.toSec();
+      // cout << "odometry fps: " << 1/consumeTime << "Hz" << endl;
+      lastTime = currentTime;
+    } catch (tf::TransformException ex) {
+      ROS_ERROR("%s", ex.what());
+      ros::Duration(1.0).sleep();
+      continue;
+    }
     rate.sleep();
   }
   return 0;
